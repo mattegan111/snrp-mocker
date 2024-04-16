@@ -1,11 +1,12 @@
 import './App.css';
+import fields from './data';
 
 function App() {
   return (
     <div className="App">
       <Header />
       <div className="main-container">
-        <MainContent />
+        <MainContent fields={fields}/>
         <Sidebar />
       </div>
     </div>
@@ -46,7 +47,7 @@ function Sidebar() {
   );
 }
 
-function MainContent() {
+function MainContent({fields}) {
   return (
     <div className="main-content">
       <div className='main-content-header'>
@@ -59,9 +60,28 @@ function MainContent() {
       <div className='form-fields'>
         <p className='required'>Indicates required</p>
         <h3>Request Detail</h3>
+        <Fields fields={fields}/>
       </div>
     </div>
   );
+}
+
+function Fields({fields})  {
+  return (
+    <div>
+      {fields.map((field) => {
+        if(field.active === true){
+          return <Field key={field.id} field={field}/>
+        }
+      })}
+    </div>
+  ); 
+}
+
+function Field({field}) {
+  return (
+    <p width={field.type_specifications.variable_width}>{field.question.name}</p>
+  )
 }
 
 export default App;
