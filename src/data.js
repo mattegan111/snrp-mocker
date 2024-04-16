@@ -1,4 +1,4 @@
-export const fields = [
+const fields = [
     {
         id: '1',
         map_to_field: false,
@@ -16,7 +16,7 @@ export const fields = [
         annotation: {
             show_help: true,
             always_expanded: true,
-            help_tag
+            help_tag: 'This is a help_tag annotation'
         },
 
         type_specifications: {
@@ -25,4 +25,6 @@ export const fields = [
 
         comments_for_developers: ''
     }
-]
+];
+
+export default fields;
