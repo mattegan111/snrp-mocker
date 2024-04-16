@@ -1,0 +1,112 @@
+.App {
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  background-color: #000000;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 8% 10px 8%;
+}
+
+.header-two {
+  background-color: #253530;
+  color: white;
+  display: flex;
+  padding: 3px 8% 3px 8%;
+}
+
+.header-two p {
+  padding: 0px 10px 0px 10px;
+}
+
+.header-three {
+  background-color: #ffffff;
+  color: #0682ff;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 8% 10px 9%;
+}
+
+.logo {
+  flex-grow: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-right p {
+  padding: 0px 10px 0px 10px;
+}
+
+.search-bar {
+  padding: 7px;
+}
+
+.search-bar input {
+  height: 28px;
+  width: 300px;
+}
+
+.search-bar button {
+  font-size: large;
+  background-color: #4CAF51;
+  border: none;
+  padding: 5px 8px 7px 8px;
+}
+
+.main-container {
+  display: flex;
+  padding: 1% 8% 0% 8%;
+  background-color: #1b1a1a;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #ffffff;
+  padding: 20px;
+  margin: 20px;
+}
+
+.submit-button {
+  background-color: #4CAF51;
+  color: black;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  width: 100%;
+}
+
+.sidebar-info {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.main-content {
+  flex-grow: 1;
+  margin: 20px;
+  background-color: #ffffff;
+}
+
+.main-content-header {
+  background-color: black;
+  color: white;
+  padding: 7px;
+}
+
+.main-content-header h1 {
+  margin: 0px;
+}
+
+.form-instructions{
+  border-bottom: 1px solid rgb(201, 201, 201);
+}
+
+.required::before {
+  content: "*";
+  color: red;
+  margin-right: 6px;
+}
