@@ -61,7 +61,7 @@
 .main-container {
   display: flex;
   padding: 1% 8% 0% 8%;
-  background-color: #1b1a1a;
+  background-color: #eaeaea;
 }
 
 .sidebar {
@@ -94,19 +94,46 @@
 .main-content-header {
   background-color: black;
   color: white;
-  padding: 7px;
+  padding: 5px 7px 5px 7px;
+  border: 9px solid black;
 }
 
 .main-content-header h1 {
   margin: 0px;
 }
 
+.form-fields {
+  padding: 20px;
+}
+
 .form-instructions{
   border-bottom: 1px solid rgb(201, 201, 201);
+  padding: 20px;
 }
 
 .required::before {
   content: "*";
   color: red;
   margin-right: 6px;
+}
+
+.field-container {
+  padding: 6px;
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+}
+
+.help-tag {
+  background-color: #eaeaea;
+  border-radius: 6px;
+  margin: 3px 0px 6px 0px;
+  padding: 10px;
+}
+
+.p-label {
+  display: contents;
+  font-size: 14px;
 }
