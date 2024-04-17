@@ -6,12 +6,14 @@ const fields = [
         type: 'Single Line Text',
         mandatory: false,
         active: true,
-        order: 1,
 
         question: {
             question_text: 'question_text',
-            name: 'name'
+            name: 'name',
+            rich_text: 'rich text'
         },
+
+        question_choices: [],
 
         annotation: {
             show_help: true,
@@ -21,6 +23,62 @@ const fields = [
 
         type_specifications: {
             variable_width: '50%'
+        },
+
+        comments_for_developers: ''
+    },
+    {
+        id: '2',
+        map_to_field: false,
+        field: '', // Which field to map to
+        type: 'Select Box',
+        mandatory: true,
+        active: true,
+
+        question: {
+            question_text: 'question_text',
+            name: 'name',
+            rich_text: 'rich text'
+        },
+
+        question_choices: ['alpha', 'bravo', 'charlie'],
+
+        annotation: {
+            show_help: true,
+            always_expanded: true,
+            help_tag: 'This is a help_tag annotation'
+        },
+
+        type_specifications: {
+            variable_width: '50%'
+        },
+
+        comments_for_developers: ''
+    },
+    {
+        id: '3',
+        map_to_field: false,
+        field: '', // Which field to map to
+        type: 'CheckBox',
+        mandatory: true,
+        active: true,
+
+        question: {
+            question_text: 'question_text',
+            name: 'name',
+            rich_text: 'rich text'
+        },
+
+        question_choices: [],
+
+        annotation: {
+            show_help: true,
+            always_expanded: true,
+            help_tag: 'This is a help_tag annotation'
+        },
+
+        type_specifications: {
+            variable_width: '100%'
         },
 
         comments_for_developers: ''
