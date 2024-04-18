@@ -92,6 +92,7 @@ function Fields({fields})  {
 
 function Field({field}) {
   const fieldClass = field.type_specifications.variable_width === '100%' ? 'full-width' : 'half-width';
+  const isRequired = field.mandatory;
 
 
   // Handle for CheckBox as the template below doesn't suit the required layout for this type
@@ -99,7 +100,7 @@ function Field({field}) {
     return (
       <div className={`field-container ${fieldClass}`}>
         <input type='checkbox'/>
-        <p className='p-label'>{field.question.name}</p>
+        <p className={`p-label ${isRequired? 'required' : null}`}>{field.question.name}</p>
       </div>
 
     );
@@ -107,7 +108,7 @@ function Field({field}) {
 
   return (
     <div className={`field-container ${fieldClass}`}>
-      <label className='field-label'>
+      <label className={`field-label ${isRequired? 'required' : null}`}>
         {field.question.name}
         {field.annotation.show_help ? 
             <p className='help-tag'>{field.annotation.help_tag}</p> : null

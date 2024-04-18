@@ -119,6 +119,7 @@ p {
   content: "*";
   color: red;
   margin-right: 6px;
+  font-size: 20px;
 }
 
 .field-container {

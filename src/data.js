@@ -60,7 +60,7 @@ export const fields = [
         map_to_field: false,
         field: '', // Which field to map to
         type: 'Single Line Text',
-        mandatory: false,
+        mandatory: true,
         active: true,
 
         question: {
@@ -88,7 +88,7 @@ export const fields = [
         map_to_field: false,
         field: '', // Which field to map to
         type: 'Select Box',
-        mandatory: true,
+        mandatory: false,
         active: true,
 
         question: {
@@ -116,7 +116,7 @@ export const fields = [
         map_to_field: false,
         field: '', // Which field to map to
         type: 'CheckBox',
-        mandatory: false,
+        mandatory: true,
         active: true,
 
         question: {
