@@ -1,12 +1,12 @@
 import './App.css';
-import fields from './data';
+import {fields, groups} from './data';
 
 function App() {
   return (
     <div className="App">
       <Header />
       <div className="main-container">
-        <MainContent fields={fields}/>
+        <MainContent fields={fields} groups={groups}/>
         <Sidebar />
       </div>
     </div>
@@ -47,7 +47,7 @@ function Sidebar() {
   );
 }
 
-function MainContent({fields}) {
+function MainContent({fields, groups}) {
   return (
     <div className="main-content">
       <div className='main-content-header'>
@@ -59,10 +59,23 @@ function MainContent({fields}) {
       </div>
       <div className='form-fields'>
         <p className='required'>Indicates required</p>
-        <Fields fields={fields}/>
+        <Groups fields={fields} groups={groups}/>
       </div>
     </div>
   );
+}
+
+function Groups({fields, groups}) {
+  return (
+    <div>
+      {groups.map((group, i) => {
+        const fieldsInGroup = fields.filter(field => group.fields.includes(Number(field.id)));
+        return (
+          <Fields fields={fieldsInGroup} groups={groups}/>
+        )
+      })}
+    </div>
+  )
 }
 
 function Fields({fields})  {
@@ -78,19 +91,22 @@ function Fields({fields})  {
 }
 
 function Field({field}) {
+  const fieldClass = field.type_specifications.variable_width === '100%' ? 'full-width' : 'half-width';
+
+
   // Handle for CheckBox as the template below doesn't suit the required layout for this type
   if(field.type == 'CheckBox'){
     return (
-      <>
+      <div className={`field-container ${fieldClass}`}>
         <input type='checkbox'/>
         <p className='p-label'>{field.question.name}</p>
-      </>
+      </div>
 
     );
   }
 
   return (
-    <div className='field-container'>
+    <div className={`field-container ${fieldClass}`}>
       <label className='field-label'>
         {field.question.name}
         {field.annotation.show_help ? 
@@ -105,14 +121,14 @@ function Field({field}) {
 function Input({field}) {
   switch(field.type){
     case 'Single Line Text':
-      return <input type='text'/>;
+      return <input type='text' className='full-width field-input'/>;
     case 'Multiple Choice':
       return (
         <>
           {field.question_choices.map((choice) => {
             return (
               <>
-                <input type="radio" id={field.id + choice} name={field.id + choice} value={choice} />
+                <input type="radio" className='full-width field-input' id={field.id + choice} name={field.id + choice} value={choice} />
                 <label for={field.id + choice}>{choice}</label>
               </>
             )})
@@ -120,14 +136,14 @@ function Input({field}) {
         </>
       )
     case 'CheckBox':
-      return <input type='checkbox'/>;
+      return <input type='checkbox' className='full-width field-input'/>;
     case 'Date':
-      return <input type='date'/>;
+      return <input type='date' className='full-width field-input'/>;
     case 'Multi Line Text':
-      return <textarea />;
+      return <textarea/>;
     case 'Select Box':
       return (
-        <select>
+        <select className='full-width field-input'>
           {field.question_choices.map((choice) => {
             return (
               <option value={choice}>{choice}</option>
@@ -137,7 +153,7 @@ function Input({field}) {
       )
     case 'Reference':
       return (
-        <select>
+        <select className='full-width field-input'>
           {['option 1', 'option 2', 'option 3'].map((choice) => { // Dummy values are used in leiu of a reference api call
             return (
               <option value={choice}>{choice}</option>
@@ -148,14 +164,14 @@ function Input({field}) {
     case 'Yes / No':
       return (
         <>
-          <input type="radio" id={field.id + 'yes'} name={field.id + 'yes'} value={'Yes'} />
+          <input type='radio' id={field.id + 'yes'} name={field.id + 'yes'} value={'Yes'} />
           <label for={field.id + 'yes'}>Yes</label>  
-          <input type="radio" id={field.id + 'no'} name={field.id + 'no'} value={'no'} />
+          <input type='radio' id={field.id + 'no'} name={field.id + 'no'} value={'no'} />
           <label for={field.id + 'no'}>No</label> 
         </>
       ) 
     case 'Rich Text Label':
-      return <p>{field.question.rich_text}</p>;
+      return <p className='full-width field-input'>{field.question.rich_text}</p>;
     default:
       break;
   }

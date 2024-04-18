@@ -1,4 +1,4 @@
-const fields = [
+export const fields = [
     {
         id: '1',
         map_to_field: false,
@@ -38,6 +38,34 @@ const fields = [
         question: {
             question_text: 'question_text',
             name: 'Last Name',
+            rich_text: ''
+        },
+
+        question_choices: [],
+
+        annotation: {
+            show_help: false,
+            always_expanded: false,
+            help_tag: ''
+        },
+
+        type_specifications: {
+            variable_width: '50%'
+        },
+
+        comments_for_developers: ''
+    },
+    {
+        id: '6',
+        map_to_field: false,
+        field: '', // Which field to map to
+        type: 'Single Line Text',
+        mandatory: false,
+        active: true,
+
+        question: {
+            question_text: 'question_text',
+            name: 'Account Name',
             rich_text: ''
         },
 
@@ -113,4 +141,15 @@ const fields = [
     }
 ];
 
-export default fields;
+export const groups = [
+    {
+        id: 1,
+        column_count: 2,
+        fields: [1, 5, 6]
+    },
+    {
+        id: 2,
+        column_count: 1,
+        fields: [2, 3]
+    }
+];

@@ -1,3 +1,7 @@
+p {
+  font-size: 14px;
+}
+
 .App {
   font-family: Arial, sans-serif;
 }
@@ -7,14 +11,14 @@
   color: white;
   display: flex;
   align-items: center;
-  padding: 10px 8% 10px 8%;
+  padding: 10px 12% 10px 12%;
 }
 
 .header-two {
   background-color: #253530;
   color: white;
   display: flex;
-  padding: 3px 8% 3px 8%;
+  padding: 3px 12% 3px 12%;
 }
 
 .header-two p {
@@ -26,7 +30,7 @@
   color: #0682ff;
   display: flex;
   justify-content: space-between;
-  padding: 10px 8% 10px 9%;
+  padding: 10px 12% 10px 12%;
 }
 
 .logo {
@@ -60,7 +64,7 @@
 
 .main-container {
   display: flex;
-  padding: 1% 8% 0% 8%;
+  padding: 1% 12% 0% 12%;
   background-color: #eaeaea;
 }
 
@@ -119,11 +123,33 @@
 
 .field-container {
   padding: 6px;
+  margin-right: 14px;
+}
+
+.full-width {
+  width: 98%;
+}
+
+.half-width {
+  width: 42%;
+  display: inline-block;
+}
+
+.one-column {
+  display: block;
+}
+
+.two-column {
+  display: inline-block;
 }
 
 .field-label {
   display: block;
   font-size: 14px;
+}
+
+.field-input {
+  padding: 7px;
 }
 
 .help-tag {
