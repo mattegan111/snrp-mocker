@@ -1,12 +1,14 @@
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import './App.css';
-import {fields, groups} from './data';
+import { data } from './data';
+import { useState } from 'react';
 
 function App() {
   return (
     <div className="App">
       <Header />
       <div className="main-container">
-        <MainContent fields={fields} groups={groups}/>
+        <MainContent data={data}/>
         <Sidebar />
       </div>
     </div>
@@ -47,7 +49,95 @@ function Sidebar() {
   );
 }
 
-function MainContent({fields, groups}) {
+function MainContent({data}) {
+  const [state, setState] = useState(data);
+
+  function onDragEnd(result) {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    
+    if (result.type === 'group') {
+      console.log(result)
+      console.log('group type')
+
+      const newGroupsOrder = Array.from(state.groupsOrder);
+      newGroupsOrder.splice(result.source.index, 1);
+      newGroupsOrder.splice(result.destination.index, 0, result.draggableId);
+
+      setState({
+        ...state,
+        groupsOrder: newGroupsOrder
+      });
+    }
+    
+    if (result.type === 'field') {
+      const homeGroup = state.groups[source.droppableId];
+      const foreignGroup = state.groups[destination.droppableId];
+  
+      if(homeGroup !== foreignGroup){
+        console.log('homeGroup !== foreignGroup')
+
+        const sourceGroup = state.groups[source.droppableId];
+        const newSourceFieldIds = Array.from(sourceGroup.fieldIds);
+        newSourceFieldIds.splice(source.index, 1);
+    
+        const newSourceGroup = {
+          ...sourceGroup,
+          fieldIds: newSourceFieldIds
+        };
+
+        const destinationGroup = state.groups[destination.droppableId];
+        const newDestinationFieldIds = Array.from(destinationGroup.fieldIds);
+        newDestinationFieldIds.splice(destination.index, 0, draggableId);
+
+        const newDestinationGroup = {
+          ...destinationGroup,
+          fieldIds: newDestinationFieldIds
+        };
+    
+        setState({
+          ...state,
+          groups: {
+            ...state.groups,
+            [newSourceGroup.id]: newSourceGroup,
+            [newDestinationGroup.id]: newDestinationGroup
+          }
+        });
+      }
+  
+      if (homeGroup === foreignGroup) {
+        console.log('homeGroup === foreignGroup')
+        const newFieldIds = Array.from(homeGroup.fieldIds);
+        newFieldIds.splice(source.index, 1);
+        newFieldIds.splice(destination.index, 0, draggableId);
+  
+        const newGroup = {
+          ...homeGroup,
+          fieldIds: newFieldIds,
+        };
+  
+        setState({
+          ...state,
+          groups: {
+            ...state.groups,
+            [newGroup.id]: newGroup,
+          },
+        });
+      }
+    }
+  }
+
   return (
     <div className="main-content">
       <div className='main-content-header'>
@@ -59,64 +149,117 @@ function MainContent({fields, groups}) {
       </div>
       <div className='form-fields'>
         <p className='required'>Indicates required</p>
-        <Groups fields={fields} groups={groups}/>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId='all-groups' type='group'>
+            {(provided) => (
+              <GroupList provided={provided} state={state} />
+            )}
+          </Droppable>
+        </ DragDropContext>
       </div>
     </div>
   );
 }
 
-function Groups({fields, groups}) {
-  return (
-    <div>
-      {groups.map((group, i) => {
-        const fieldsInGroup = fields.filter(field => group.fields.includes(Number(field.id)));
-        return (
-          <Fields fields={fieldsInGroup} groups={groups}/>
-        )
-      })}
-    </div>
-  )
+function GroupList({provided, state}) {
+  return (<div 
+    ref={provided.innerRef}
+    {...provided.droppableProps}>
+    {state.groupsOrder.map((groupId, index) => {
+      return (
+
+        <Draggable key={`dc-${groupId}`} draggableId={groupId} index={index}>
+          {(provided) => (
+            <div             
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            >
+              <GroupContainer  groups={state.groups} groupId={groupId} fields={state.fields}/>
+            </div>
+          )}
+        </ Draggable>
+      )
+    })}
+    {provided.placeholder}
+  </div>)
 }
 
-function Fields({fields})  {
-  return (
-    <div>
-      {fields.map((field) => {
-        if(field.active === true){
-          return <Field key={field.id} field={field}/>
-        }
-      })}
-    </div>
-  ); 
+function GroupContainer({groups, groupId, fields}) {
+  const group = groups[groupId]
+  const fieldsOfGroup = group.fieldIds.map(fieldId => fields[fieldId]);
+  return <Group key={group.id} group={group} fields={fieldsOfGroup} />;
 }
 
-function Field({field}) {
+function Group({group, fields}) {
+  return <div>
+    {group.id}
+    <Droppable droppableId={group.id} type='field'>
+      {(provided) => (
+        <FieldList provided={provided} fields={fields} />
+      )}
+    </Droppable>
+  </div>
+}
+
+function FieldList({fields, provided}) {
+  return (<div 
+    ref={provided.innerRef}
+    {...provided.droppableProps}>
+      {fields.map((field, index) => {
+        console.log('FIELD')
+        console.log(field)
+        return <Field key={field.id} field={field} index={index} />;
+      })}
+      {provided.placeholder}
+  </div>)
+}
+
+function Field({field, index}) {
   const fieldClass = field.type_specifications.variable_width === '100%' ? 'full-width' : 'half-width';
   const isRequired = field.mandatory;
-
 
   // Handle for CheckBox as the template below doesn't suit the required layout for this type
   if(field.type == 'CheckBox'){
     return (
-      <div className={`field-container ${fieldClass}`}>
-        <input type='checkbox'/>
-        <p className={`p-label ${isRequired? 'required' : null}`}>{field.question.name}</p>
-      </div>
-
+      <Draggable draggableId={field.id} index={index}>
+        {(provided) => (
+          <div 
+          className={`field-container ${fieldClass}`}            
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          >
+            <input type='checkbox'/>
+            <p className={`p-label ${isRequired? 'required' : null}`}>{field.question.name}</p>
+          </div>
+        )}
+      </ Draggable>
     );
   }
 
   return (
-    <div className={`field-container ${fieldClass}`}>
-      <label className={`field-label ${isRequired? 'required' : null}`}>
-        {field.question.name}
-        {field.annotation.show_help ? 
-            <p className='help-tag'>{field.annotation.help_tag}</p> : null
-        }
-      </label>
-      <Input field={field}/>
+    <div>
+      <Draggable draggableId={field.id} index={index}>
+        {(provided) => (
+          <div             
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          className={`field-container ${fieldClass}`}
+          >
+            <label className={`field-label ${isRequired? 'required' : null}`}>
+              {field.question.name}
+              {field.annotation.show_help ? 
+                  <p className='help-tag'>{field.annotation.help_tag}</p> : null
+              }
+            </label>
+            <Input field={field}/>
+          </div>
+      )}
+      </ Draggable>
     </div>
-  )
+  );
 }
 
 function Input({field}) {
@@ -176,8 +319,6 @@ function Input({field}) {
     default:
       break;
   }
-
-
 }
 
 export default App;
