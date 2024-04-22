@@ -1,155 +1,157 @@
-export const fields = [
-    {
-        id: '1',
-        map_to_field: false,
-        field: '', // Which field to map to
-        type: 'Single Line Text',
-        mandatory: false,
-        active: true,
+export const data = {
+    fields: {
+        'field-1': {
+            id: 'field-1',
+            map_to_field: false,
+            field: '', // Which field to map to
+            type: 'Single Line Text',
+            mandatory: false,
+            active: true,
 
-        question: {
-            question_text: 'question_text',
-            name: 'First Name',
-            rich_text: ''
+            question: {
+                question_text: 'question_text',
+                name: 'First Name',
+                rich_text: ''
+            },
+
+            question_choices: [],
+
+            annotation: {
+                show_help: false,
+                always_expanded: false,
+                help_tag: ''
+            },
+
+            type_specifications: {
+                variable_width: '50%'
+            },
+
+            comments_for_developers: ''
         },
+        'field-5': {
+            id: 'field-5',
+            map_to_field: false,
+            field: '', // Which field to map to
+            type: 'Single Line Text',
+            mandatory: false,
+            active: true,
 
-        question_choices: [],
+            question: {
+                question_text: 'question_text',
+                name: 'Last Name',
+                rich_text: ''
+            },
 
-        annotation: {
-            show_help: false,
-            always_expanded: false,
-            help_tag: ''
+            question_choices: [],
+
+            annotation: {
+                show_help: false,
+                always_expanded: false,
+                help_tag: ''
+            },
+
+            type_specifications: {
+                variable_width: '50%'
+            },
+
+            comments_for_developers: ''
         },
+        'field-6': {
+            id: 'field-6',
+            map_to_field: false,
+            field: '', // Which field to map to
+            type: 'Single Line Text',
+            mandatory: true,
+            active: true,
 
-        type_specifications: {
-            variable_width: '50%'
+            question: {
+                question_text: 'question_text',
+                name: 'Account Name',
+                rich_text: ''
+            },
+
+            question_choices: [],
+
+            annotation: {
+                show_help: false,
+                always_expanded: false,
+                help_tag: ''
+            },
+
+            type_specifications: {
+                variable_width: '50%'
+            },
+
+            comments_for_developers: ''
         },
+        'field-2': {
+            id: 'field-2',
+            map_to_field: false,
+            field: '', // Which field to map to
+            type: 'Select Box',
+            mandatory: false,
+            active: true,
 
-        comments_for_developers: ''
+            question: {
+                question_text: 'question_text',
+                name: 'Select Account',
+                rich_text: 'rich text'
+            },
+
+            question_choices: ['Cheque', 'Savings', 'Credit'],
+
+            annotation: {
+                show_help: true,
+                always_expanded: true,
+                help_tag: 'This is a help_tag annotation'
+            },
+
+            type_specifications: {
+                variable_width: '50%'
+            },
+
+            comments_for_developers: ''
+        },
+        'field-3': {
+            id: 'field-3',
+            map_to_field: false,
+            field: '', // Which field to map to
+            type: 'CheckBox',
+            mandatory: true,
+            active: true,
+
+            question: {
+                question_text: 'question_text',
+                name: 'I would like to tick a box',
+                rich_text: ''
+            },
+
+            question_choices: [],
+
+            annotation: {
+                show_help: false,
+                always_expanded: false,
+                help_tag: ''
+            },
+
+            type_specifications: {
+                variable_width: '100%'
+            },
+
+            comments_for_developers: ''
+        },
     },
-    {
-        id: '5',
-        map_to_field: false,
-        field: '', // Which field to map to
-        type: 'Single Line Text',
-        mandatory: false,
-        active: true,
-
-        question: {
-            question_text: 'question_text',
-            name: 'Last Name',
-            rich_text: ''
+    groups: {
+        'group-1': {
+            id: 'group-1',
+            column_count: 2,
+            fieldIds: ['field-1', 'field-5', 'field-6']
         },
-
-        question_choices: [],
-
-        annotation: {
-            show_help: false,
-            always_expanded: false,
-            help_tag: ''
-        },
-
-        type_specifications: {
-            variable_width: '50%'
-        },
-
-        comments_for_developers: ''
+        'group-2': {
+            id: 'group-2',
+            column_count: 1,
+            fieldIds: ['field-2', 'field-3']
+        }
     },
-    {
-        id: '6',
-        map_to_field: false,
-        field: '', // Which field to map to
-        type: 'Single Line Text',
-        mandatory: true,
-        active: true,
-
-        question: {
-            question_text: 'question_text',
-            name: 'Account Name',
-            rich_text: ''
-        },
-
-        question_choices: [],
-
-        annotation: {
-            show_help: false,
-            always_expanded: false,
-            help_tag: ''
-        },
-
-        type_specifications: {
-            variable_width: '50%'
-        },
-
-        comments_for_developers: ''
-    },
-    {
-        id: '2',
-        map_to_field: false,
-        field: '', // Which field to map to
-        type: 'Select Box',
-        mandatory: false,
-        active: true,
-
-        question: {
-            question_text: 'question_text',
-            name: 'Select Account',
-            rich_text: 'rich text'
-        },
-
-        question_choices: ['Cheque', 'Savings', 'Credit'],
-
-        annotation: {
-            show_help: true,
-            always_expanded: true,
-            help_tag: 'This is a help_tag annotation'
-        },
-
-        type_specifications: {
-            variable_width: '50%'
-        },
-
-        comments_for_developers: ''
-    },
-    {
-        id: '3',
-        map_to_field: false,
-        field: '', // Which field to map to
-        type: 'CheckBox',
-        mandatory: true,
-        active: true,
-
-        question: {
-            question_text: 'question_text',
-            name: 'I would like to tick a box',
-            rich_text: ''
-        },
-
-        question_choices: [],
-
-        annotation: {
-            show_help: false,
-            always_expanded: false,
-            help_tag: ''
-        },
-
-        type_specifications: {
-            variable_width: '100%'
-        },
-
-        comments_for_developers: ''
-    }
-];
-
-export const groups = [
-    {
-        id: 1,
-        column_count: 2,
-        fields: [1, 5, 6]
-    },
-    {
-        id: 2,
-        column_count: 1,
-        fields: [2, 3]
-    }
-];
+    groupsOrder: ['group-1', 'group-2']
+};
