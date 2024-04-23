@@ -4,12 +4,16 @@ import { data } from './data';
 import { useState } from 'react';
 
 function App() {
+  const [openEditingSidebar, setOpenEditingSidebar] = useState(true);
+  const toggleEditingSidebar = () => setOpenEditingSidebar(!openEditingSidebar);
+
   return (
     <div className="App">
       <Header />
       <div className="main-container">
         <MainContent data={data}/>
-        <Sidebar />
+        <SubmitPanel />
+        <EditingSidebar openEditingSidebar={openEditingSidebar} toggleEditingSidebar={toggleEditingSidebar} />
       </div>
     </div>
   );
@@ -41,13 +45,29 @@ function Header() {
   );
 }
 
-function Sidebar() {
+function SubmitPanel() {
   return (
-    <div className="sidebar">
+    <div className="submit-panel">
       <button className="submit-button">Submit</button>
     </div>
   );
 }
+
+const EditingSidebar = ({ openEditingSidebar, toggleEditingSidebar }) => {
+  return (
+    <div className={openEditingSidebar ? 'editing-sidebar open' : 'editing-sidebar'}>
+      <button onClick={toggleEditingSidebar}>Close</button>
+      <ul>
+        <li>Menu Item 1</li>
+        <li>Menu Item 2</li>
+        <li>Menu Item 3</li>
+        <li>Menu Item 4</li>
+      </ul>
+    </div>
+  );
+}
+
+
 
 function MainContent({data}) {
   const [state, setState] = useState(data);
