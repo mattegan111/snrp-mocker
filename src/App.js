@@ -192,8 +192,8 @@ function GroupContainer({groups, groupId, fields}) {
 }
 
 function Group({group, fields}) {
-  return <div>
-    {group.id}
+  return <div className='purple-border'>
+    <p className='purple-text'>{group.id}</p>
     <Droppable droppableId={group.id} type='field'>
       {(provided) => (
         <FieldList provided={provided} fields={fields} />

@@ -1,13 +1,3 @@
-.test-container {
-  margin: 8px;
-  background-color: red;
-}
-
-.test-field-list {
-  padding: 8px  ;
-  background-color: blue;
-}
-
 p {
   font-size: 14px;
 }
@@ -80,6 +70,7 @@ p {
 
 .sidebar {
   width: 200px;
+  height: 400px;
   background-color: #ffffff;
   padding: 20px;
   margin: 20px;
@@ -173,4 +164,15 @@ p {
 .p-label {
   display: contents;
   font-size: 14px;
+}
+
+.purple-border {
+  border: 1px dotted violet;
+}
+
+.purple-text {
+  display: inline;
+  padding: 0px;
+  font-size: 10px;
+  color: violet;
 }
