@@ -87,11 +87,19 @@ p {
   overflow-x: hidden;
   transition: 0.1s;
   padding-top: 60px;
-  color: white;
+  color: black;
 }
 
 .editing-sidebar.open {
   width: 250px;
+}
+
+.read-only-style {
+  color: #6c757d;
+  background-color: #e9ecef; 
+  border: 1px solid #ced4da; 
+  cursor: not-allowed; 
+  pointer-events: none; 
 }
 
 .submit-button {
@@ -144,6 +152,15 @@ p {
 .field-container {
   padding: 6px;
   margin-right: 14px;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.display-flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .full-width {

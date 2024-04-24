@@ -1,19 +1,40 @@
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import './App.css';
-import { data } from './data';
-import { useState } from 'react';
+import { data as dataImport } from './data';
+import {typeAttributes as allTypeAttributes} from './typeAttributes';
+import { createContext, useContext, useState } from 'react';
+
+const AppContext = createContext();
 
 function App() {
-  const [openEditingSidebar, setOpenEditingSidebar] = useState(true);
-  const toggleEditingSidebar = () => setOpenEditingSidebar(!openEditingSidebar);
+  const [openEditingSidebar, setOpenEditingSidebar] = useState(false);
+  const toggleEditingSidebar = () => {
+    setOpenEditingSidebar(!openEditingSidebar)
+  };
+  const [editingField, setEditingField] = useState();
+  const [typeAttributes, setTypeAttributes] = useState([]);
+  const [data, setData] = useState(dataImport)
 
   return (
     <div className="App">
       <Header />
       <div className="main-container">
-        <MainContent data={data}/>
-        <SubmitPanel />
-        <EditingSidebar openEditingSidebar={openEditingSidebar} toggleEditingSidebar={toggleEditingSidebar} />
+        <AppContext.Provider value={
+          { data, 
+            setData,
+            openEditingSidebar, 
+            setOpenEditingSidebar, 
+            typeAttributes,
+            setTypeAttributes,
+            toggleEditingSidebar, 
+            editingField, 
+            setEditingField,
+            allTypeAttributes 
+          }}>
+          <MainContent/>
+          <SubmitPanel />
+          <EditingSidebar />
+        </AppContext.Provider>
       </div>
     </div>
   );
@@ -53,24 +74,169 @@ function SubmitPanel() {
   );
 }
 
-const EditingSidebar = ({ openEditingSidebar, toggleEditingSidebar }) => {
+function EditingSidebar() {
+  const { data, setData, typeAttributes, editingField, setEditingField, openEditingSidebar, toggleEditingSidebar } = useContext(AppContext);
+
+  function onChange(e, key) {
+    function setNestedObjectValues(targetObj, path, value) {
+      const keys = path.split('.');
+      const lastKey = keys.pop();
+      const lastObj = keys.reduce((acc, key) => {
+        if (!acc[key] || typeof acc[key] !== 'object') {
+          acc[key] = {};
+        }
+        return acc[key];
+      }, targetObj);
+      lastObj[lastKey] = value; 
+      return {...targetObj}; 
+    }
+    const newEditingField = setNestedObjectValues(editingField, key, e.target.value);
+    setEditingField(newEditingField);
+    setData({
+      ...data,
+      fields:{
+        ...data.fields,
+        [editingField.id]:{
+          ...newEditingField
+        }
+      }
+    });
+  }
+  
+
+  function onChangeMandatory(e) {
+    const newEditingField = {...editingField};
+    newEditingField.mandatory = e.target.checked;
+    setEditingField(newEditingField); 
+
+    setData({
+      ...data,
+      fields:{
+        ...data.fields,
+        [editingField.id]:{
+          ...newEditingField
+        }
+      }
+    });
+  }
+
   return (
     <div className={openEditingSidebar ? 'editing-sidebar open' : 'editing-sidebar'}>
-      <button onClick={toggleEditingSidebar}>Close</button>
       <ul>
-        <li>Menu Item 1</li>
-        <li>Menu Item 2</li>
-        <li>Menu Item 3</li>
-        <li>Menu Item 4</li>
+        {editingField && (
+          <div>
+            {editingField.id}
+            <div className='display-flex-column'>
+              <label className='editing-label'>Question text</label>
+              <input 
+                value={editingField.question.question_text}
+                onChange={(e) => onChange(e, 'question.question_text')}
+              />
+            </div>
+            <div className='display-flex-column'>
+              <label className='editing-label'>Name (system-only)</label>
+              <input 
+                className='read-only-style'
+                value={editingField.question.name}
+                readOnly={true}
+              />
+            </div>
+          </div>
+        )}
+        {typeAttributes.includes('type') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Type</label>
+            <input 
+              value={editingField.type}
+              onChange={(e) => onChange(e, 'type')}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('mandatory') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Mandatory</label>
+            <input 
+              checked={editingField.mandatory}
+              type='checkbox'
+              onChange={(e) => onChangeMandatory(e)}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.show_help') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Show help</label>
+            <input 
+              checked={editingField.annotation.show_help}
+              type='checkbox'
+              onChange={(e) => onChangeMandatory(e)}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.always_expanded') 
+          && editingField.annotation.show_help && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Always expanded</label>
+            <input 
+              checked={editingField.annotation.always_expanded}
+              type='checkbox'
+              onChange={(e) => onChangeMandatory(e)}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.help_tag') 
+          && editingField.annotation.show_help && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Help tag</label>
+            <input 
+              value={editingField.annotation.help_tag}
+              onChange={(e) => onChange(e, 'annotation.help_tag')}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.comments_for_developers') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Comments for developers</label>
+            <input 
+              value={editingField.comments_for_developers}
+              onChange={(e) => onChange(e, 'annotation.comments_for_developers')}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.impacts_reporting') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Impacts reporting</label>
+            <input 
+              value={editingField.impacts_reporting}
+              onChange={(e) => onChange(e, 'annotation.impacts_reporting')}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.active') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Active</label>
+            <input 
+              value={editingField.active}
+              onChange={(e) => onChange(e, 'annotation.active')}
+            />
+          </div>
+        )}
+        {typeAttributes.includes('annotation.fields_to_include') && (
+          <div className='display-flex-column'>
+            <label className='editing-label'>Fields to include: (by Name)</label>
+            <input 
+              value={editingField.fields_to_include}
+              onChange={(e) => onChange(e, 'annotation.fields_to_include')}
+            />
+          </div>
+        )}
+        <button onClick={toggleEditingSidebar}>Close</button>
       </ul>
     </div>
   );
 }
 
-
-
-function MainContent({data}) {
-  const [state, setState] = useState(data);
+function MainContent() {
+  const { data, setData } = useContext(AppContext);
 
   function onDragEnd(result) {
     const { destination, source, draggableId } = result;
@@ -88,27 +254,22 @@ function MainContent({data}) {
 
     
     if (result.type === 'group') {
-      console.log(result)
-      console.log('group type')
-
-      const newGroupsOrder = Array.from(state.groupsOrder);
+      const newGroupsOrder = Array.from(data.groupsOrder);
       newGroupsOrder.splice(result.source.index, 1);
       newGroupsOrder.splice(result.destination.index, 0, result.draggableId);
 
-      setState({
-        ...state,
+      setData({
+        ...data,
         groupsOrder: newGroupsOrder
       });
     }
     
     if (result.type === 'field') {
-      const homeGroup = state.groups[source.droppableId];
-      const foreignGroup = state.groups[destination.droppableId];
+      const homeGroup = data.groups[source.droppableId];
+      const foreignGroup = data.groups[destination.droppableId];
   
       if(homeGroup !== foreignGroup){
-        console.log('homeGroup !== foreignGroup')
-
-        const sourceGroup = state.groups[source.droppableId];
+        const sourceGroup = data.groups[source.droppableId];
         const newSourceFieldIds = Array.from(sourceGroup.fieldIds);
         newSourceFieldIds.splice(source.index, 1);
     
@@ -117,7 +278,7 @@ function MainContent({data}) {
           fieldIds: newSourceFieldIds
         };
 
-        const destinationGroup = state.groups[destination.droppableId];
+        const destinationGroup = data.groups[destination.droppableId];
         const newDestinationFieldIds = Array.from(destinationGroup.fieldIds);
         newDestinationFieldIds.splice(destination.index, 0, draggableId);
 
@@ -126,10 +287,10 @@ function MainContent({data}) {
           fieldIds: newDestinationFieldIds
         };
     
-        setState({
-          ...state,
+        setData({
+          ...data,
           groups: {
-            ...state.groups,
+            ...data.groups,
             [newSourceGroup.id]: newSourceGroup,
             [newDestinationGroup.id]: newDestinationGroup
           }
@@ -137,7 +298,6 @@ function MainContent({data}) {
       }
   
       if (homeGroup === foreignGroup) {
-        console.log('homeGroup === foreignGroup')
         const newFieldIds = Array.from(homeGroup.fieldIds);
         newFieldIds.splice(source.index, 1);
         newFieldIds.splice(destination.index, 0, draggableId);
@@ -147,10 +307,10 @@ function MainContent({data}) {
           fieldIds: newFieldIds,
         };
   
-        setState({
-          ...state,
+        setData({
+          ...data,
           groups: {
-            ...state.groups,
+            ...data.groups,
             [newGroup.id]: newGroup,
           },
         });
@@ -172,7 +332,7 @@ function MainContent({data}) {
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId='all-groups' type='group'>
             {(provided) => (
-              <GroupList provided={provided} state={state} />
+              <GroupList provided={provided} data={data} />
             )}
           </Droppable>
         </ DragDropContext>
@@ -181,11 +341,11 @@ function MainContent({data}) {
   );
 }
 
-function GroupList({provided, state}) {
+function GroupList({provided, data}) {
   return (<div 
     ref={provided.innerRef}
     {...provided.droppableProps}>
-    {state.groupsOrder.map((groupId, index) => {
+    {data.groupsOrder.map((groupId, index) => {
       return (
 
         <Draggable key={`dc-${groupId}`} draggableId={groupId} index={index}>
@@ -195,7 +355,7 @@ function GroupList({provided, state}) {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             >
-              <GroupContainer  groups={state.groups} groupId={groupId} fields={state.fields}/>
+              <GroupContainer  groups={data.groups} groupId={groupId} fields={data.fields}/>
             </div>
           )}
         </ Draggable>
@@ -227,8 +387,6 @@ function FieldList({fields, provided}) {
     ref={provided.innerRef}
     {...provided.droppableProps}>
       {fields.map((field, index) => {
-        console.log('FIELD')
-        console.log(field)
         return <Field key={field.id} field={field} index={index} />;
       })}
       {provided.placeholder}
@@ -236,8 +394,32 @@ function FieldList({fields, provided}) {
 }
 
 function Field({field, index}) {
+  const {
+    data, 
+    setData, 
+    editingField, 
+    setEditingField, 
+    typeAttributes,
+    setTypeAttributes,
+    openEditingSidebar, 
+    setOpenEditingSidebar, 
+    toggleEditingSidebar,
+    allTypeAttributes
+  } = useContext(AppContext);
   const fieldClass = field.type_specifications.variable_width === '100%' ? 'full-width' : 'half-width';
-  const isRequired = field.mandatory;
+
+  function handleOnClick(e){
+    e.preventDefault();
+    console.log(field)
+    console.log(allTypeAttributes[field.type.replaceAll(' ', '_').toLowerCase()]);
+    setTypeAttributes(allTypeAttributes[field.type.replaceAll(' ', '_').toLowerCase()]);
+    if(editingField == field){
+      toggleEditingSidebar();
+    } else {
+      setEditingField(field);
+      setOpenEditingSidebar(true);
+    }
+  }
 
   // Handle for CheckBox as the template below doesn't suit the required layout for this type
   if(field.type == 'CheckBox'){
@@ -245,13 +427,13 @@ function Field({field, index}) {
       <Draggable draggableId={field.id} index={index}>
         {(provided) => (
           <div 
-          className={`field-container ${fieldClass}`}            
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
+            className={`field-container display-flex ${fieldClass}`}            
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
           >
-            <input type='checkbox'/>
-            <p className={`p-label ${isRequired? 'required' : null}`}>{field.question.name}</p>
+            <input type='checkbox' />
+            <p className={`p-label ${field.mandatory ? 'required' : ''}`} onClick={handleOnClick} >{field.question.question_text}</p>
           </div>
         )}
       </ Draggable>
@@ -259,7 +441,6 @@ function Field({field, index}) {
   }
 
   return (
-    <div>
       <Draggable draggableId={field.id} index={index}>
         {(provided) => (
           <div             
@@ -267,18 +448,18 @@ function Field({field, index}) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           className={`field-container ${fieldClass}`}
+          onClick={handleOnClick}
           >
-            <label className={`field-label ${isRequired? 'required' : null}`}>
-              {field.question.name}
+            <label className={`field-label ${field.mandatory? 'required' : ''}`}>
+              {field.question.question_text}
               {field.annotation.show_help ? 
-                  <p className='help-tag'>{field.annotation.help_tag}</p> : null
+                  <p className='help-tag'>{field.annotation.help_tag}</p> : ''
               }
             </label>
             <Input field={field}/>
           </div>
-      )}
+        )}
       </ Draggable>
-    </div>
   );
 }
 
@@ -308,9 +489,9 @@ function Input({field}) {
     case 'Select Box':
       return (
         <select className='full-width field-input'>
-          {field.question_choices.map((choice) => {
+          {field.question_choices.map((choice, i) => {
             return (
-              <option value={choice}>{choice}</option>
+              <option key={`qc${i}`} value={choice}>{choice}</option>
             )})
           }
         </select>

@@ -3,14 +3,14 @@ export const data = {
         'field-1': {
             id: 'field-1',
             map_to_field: false,
-            field: '', // Which field to map to
+            field_to_map_to: '',
             type: 'Single Line Text',
             mandatory: false,
             active: true,
 
             question: {
-                question_text: 'question_text',
-                name: 'First Name',
+                question_text: 'First Name',
+                name: 'first_name',
                 rich_text: ''
             },
 
@@ -26,19 +26,21 @@ export const data = {
                 variable_width: '50%'
             },
 
-            comments_for_developers: ''
+            comments_for_developers: '',
+
+            impacts_reporting: false
         },
         'field-5': {
             id: 'field-5',
             map_to_field: false,
-            field: '', // Which field to map to
+            field_to_map_to: '',
             type: 'Single Line Text',
             mandatory: false,
             active: true,
 
             question: {
-                question_text: 'question_text',
-                name: 'Last Name',
+                question_text: 'Last Name',
+                name: 'last_name',
                 rich_text: ''
             },
 
@@ -54,19 +56,21 @@ export const data = {
                 variable_width: '50%'
             },
 
-            comments_for_developers: ''
+            comments_for_developers: '',
+
+            impacts_reporting: false
         },
         'field-6': {
             id: 'field-6',
             map_to_field: false,
-            field: '', // Which field to map to
+            field_to_map_to: '',
             type: 'Single Line Text',
             mandatory: true,
             active: true,
 
             question: {
-                question_text: 'question_text',
-                name: 'Account Name',
+                question_text: 'Account Name',
+                name: 'account_name',
                 rich_text: ''
             },
 
@@ -82,19 +86,21 @@ export const data = {
                 variable_width: '50%'
             },
 
-            comments_for_developers: ''
+            comments_for_developers: '',
+
+            impacts_reporting: false
         },
         'field-2': {
             id: 'field-2',
             map_to_field: false,
-            field: '', // Which field to map to
+            field_to_map_to: '',
             type: 'Select Box',
             mandatory: false,
             active: true,
 
             question: {
-                question_text: 'question_text',
-                name: 'Select Account',
+                question_text: 'Select Account',
+                name: 'select_account',
                 rich_text: 'rich text'
             },
 
@@ -110,19 +116,21 @@ export const data = {
                 variable_width: '50%'
             },
 
-            comments_for_developers: ''
+            comments_for_developers: '',
+
+            impacts_reporting: false
         },
         'field-3': {
             id: 'field-3',
             map_to_field: false,
-            field: '', // Which field to map to
+            field_to_map_to: '',
             type: 'CheckBox',
             mandatory: true,
             active: true,
 
             question: {
-                question_text: 'question_text',
-                name: 'I would like to tick a box',
+                question_text: 'I would like to tick a box',
+                name: 'i_would_like_to_click_a_box',
                 rich_text: ''
             },
 
@@ -138,7 +146,9 @@ export const data = {
                 variable_width: '100%'
             },
 
-            comments_for_developers: ''
+            comments_for_developers: '',
+
+            impacts_reporting: false
         },
     },
     groups: {
