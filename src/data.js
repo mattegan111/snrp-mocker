@@ -1,10 +1,28 @@
 export const data = {
+    form: {
+        title: 'Example Form',
+        description: 'Description of the form here...',
+        instructions: 'Instructions on how to fill out the form',
+        categories: 'Category, Subcategory',
+        purpose: 'Form Purpose',
+        related_help_articles: 'related_help_articles',
+        meta_tags: 'meta_tags',
+        default_case_priority: '', //TODO check that this is determined at a record producer levdefault_case_priorityel
+        short_description: 'short_description',
+        portal_or_ingestion_channel: 'portal_or_ingestion_channel',
+        portal_visibility: 'form_visibility',
+        case_visibility: 'case_visibility',
+        submitter_of_the_form: 'submitter_of_the_form',
+        fulfiller_of_the_case: 'fulfiller_of_the_case',
+        name_of_key_stakeholder: 'name_of_key_stakeholder',
+        other_users: 'other_users'
+    },
     fields: {
         'field-1': {
             id: 'field-1',
             map_to_field: false,
             field_to_map_to: '',
-            type: 'Single Line Text',
+            type: 'single_line_text',
             mandatory: false,
             active: true,
 
@@ -14,7 +32,7 @@ export const data = {
                 rich_text: ''
             },
 
-            question_choices: [],
+            question_choices: {},
 
             annotation: {
                 show_help: false,
@@ -23,7 +41,7 @@ export const data = {
             },
 
             type_specifications: {
-                variable_width: '50%'
+                variable_width: '100%'
             },
 
             comments_for_developers: '',
@@ -34,7 +52,7 @@ export const data = {
             id: 'field-5',
             map_to_field: false,
             field_to_map_to: '',
-            type: 'Single Line Text',
+            type: 'single_line_text',
             mandatory: false,
             active: true,
 
@@ -44,7 +62,7 @@ export const data = {
                 rich_text: ''
             },
 
-            question_choices: [],
+            question_choices: {},
 
             annotation: {
                 show_help: false,
@@ -53,7 +71,7 @@ export const data = {
             },
 
             type_specifications: {
-                variable_width: '50%'
+                variable_width: '100%'
             },
 
             comments_for_developers: '',
@@ -64,7 +82,7 @@ export const data = {
             id: 'field-6',
             map_to_field: false,
             field_to_map_to: '',
-            type: 'Single Line Text',
+            type: 'single_line_text',
             mandatory: true,
             active: true,
 
@@ -74,7 +92,7 @@ export const data = {
                 rich_text: ''
             },
 
-            question_choices: [],
+            question_choices: {},
 
             annotation: {
                 show_help: false,
@@ -83,7 +101,7 @@ export const data = {
             },
 
             type_specifications: {
-                variable_width: '50%'
+                variable_width: '100%'
             },
 
             comments_for_developers: '',
@@ -94,7 +112,7 @@ export const data = {
             id: 'field-2',
             map_to_field: false,
             field_to_map_to: '',
-            type: 'Select Box',
+            type: 'select_box',
             mandatory: false,
             active: true,
 
@@ -104,7 +122,11 @@ export const data = {
                 rich_text: 'rich text'
             },
 
-            question_choices: ['Cheque', 'Savings', 'Credit'],
+            question_choices: {
+                'Cheque': {id: 'Cheque', value: 'Cheque'}, 
+                'Savings': {id: 'Savings', value: 'Savings'}, 
+                'Credit': {id: 'Credit', value: 'Credit'}
+            },
 
             annotation: {
                 show_help: true,
@@ -113,7 +135,7 @@ export const data = {
             },
 
             type_specifications: {
-                variable_width: '50%'
+                variable_width: '100%'
             },
 
             comments_for_developers: '',
@@ -124,7 +146,7 @@ export const data = {
             id: 'field-3',
             map_to_field: false,
             field_to_map_to: '',
-            type: 'CheckBox',
+            type: 'checkbox',
             mandatory: true,
             active: true,
 
@@ -134,7 +156,7 @@ export const data = {
                 rich_text: ''
             },
 
-            question_choices: [],
+            question_choices: {},
 
             annotation: {
                 show_help: false,

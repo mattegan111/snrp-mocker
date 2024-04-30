@@ -1,12 +1,78 @@
 const titleAttributes = ['type', 'title'];
-const richTextLabelAttributes = ['type', 'rich_text', 'mandatory', 'active', 'instructions', 'annotation.show_help', 'annotation.always_expanded', 'annotation.help_tag', 'comments_for_developers', 'impacts_reporting'];
-const defaultAttributes = ['type', 'question_text', 'mandatory', 'active', 'instructions', 'annotation.show_help', 'annotation.always_expanded', 'annotation.help_tag', 'comments_for_developers', 'impacts_reporting'];
 
-export const typeAttributes = {
+const richTextLabelAttributes = [
+    'type', 'rich_text', 'mandatory', 'active', 'instructions', 'annotation.show_help', 'annotation.always_expanded', 'annotation.help_tag', 'comments_for_developers', 'impacts_reporting'];
+
+const defaultAttributes = ['type', 'question.question_text', 'question.name', 'mandatory', 'active', 'instructions', 'annotation.show_help', 'annotation.always_expanded', 'annotation.help_tag', 'comments_for_developers', 'impacts_reporting'];
+
+const booleanTypeAttributes = ['map_to_field', 'mandatory', 'active', 'annotation.show_help', 'annotation.always_expanded', 'impacts_reporting']; 
+
+const uniqueAttributes = [...new Set([...titleAttributes, ...richTextLabelAttributes, ...defaultAttributes])];
+
+const defaultObject = {
+    id: '',
+    map_to_field: false,
+    field_to_map_to: '',
+    type: '',
+    mandatory: false,
+    active: true,
+
+    question: {
+        question_text: '',
+        name: '',
+    },
+
+    annotation: {
+        show_help: false,
+        always_expanded: false,
+        help_tag: ''
+    },
+
+    type_specifications: {
+        variable_width: '100%'
+    },
+
+    comments_for_developers: '',
+
+    impacts_reporting: false
+}
+
+const richTextLabelObject = {
+    id: '',
+    map_to_field: false,
+    field_to_map_to: '',
+    type: '',
+    mandatory: false,
+    active: true,
+
+    question: {
+        question_text: '',
+        name: '',
+        rich_text: ''
+    },
+
+    annotation: {
+        show_help: false,
+        always_expanded: false,
+        help_tag: ''
+    },
+
+    type_specifications: {
+        variable_width: '100%'
+    },
+
+    comments_for_developers: '',
+
+    impacts_reporting: false
+}
+
+const titleObject = {
+    type: 'title',
+    title: ''
+}
+
+const allTypeAttributes = {
     attachment: [
-        ...defaultAttributes
-    ],
-    break: [
         ...defaultAttributes
     ],
     checkbox: [
@@ -31,17 +97,14 @@ export const typeAttributes = {
         ...defaultAttributes,
         'question_choices' 
     ],
-    multi_row_variable: [
-        'fields_to_include' // by name
-    ],
     reference: [
         ...defaultAttributes
     ],
     rich_text_label: [
-        {...richTextLabelAttributes} //richTextLabelAttributes
+        ...richTextLabelAttributes //richTextLabelAttributes
     ],
     title: [ // aka Section or Container Start with title
-        {...titleAttributes}, // titleAttributes
+        ...titleAttributes, // titleAttributes
     ],
     select_box: [
         ...defaultAttributes,
@@ -57,3 +120,69 @@ export const typeAttributes = {
         ...defaultAttributes
     ],
 }
+
+const allDefaultObjects = {
+    attachment: {
+        ...defaultObject,
+        type: 'attachment'
+    },
+    checkbox: {
+        ...defaultObject,
+        type: 'checkbox'
+    },
+    date: {
+        ...defaultObject,
+        type: 'date'
+    },
+    email: {
+        ...defaultObject,
+        type: 'email'
+    },
+    label: {
+        ...defaultObject,
+        type: 'label'
+    },
+    lookup_select_box: {
+        ...defaultObject,
+        type: 'lookup_select_box'
+    },
+    multi_line_text: {
+        ...defaultObject,
+        type: 'multi_line_text'
+    },
+    multiple_choice: {
+        ...defaultObject,
+        type: 'multiple_choice',
+        question_choices: {}
+    },
+    reference: {
+        ...defaultObject,
+        type: 'reference'
+    },
+    rich_text_label: {
+        ...richTextLabelObject, //richTextLabelAttributes
+        type: 'rich_text_label'
+    },
+    title: { // aka Section or Container Start with title
+        ...titleObject, // titleAttributes
+    },
+    select_box: {
+        ...defaultObject,
+        type: 'select_box',
+        question_choices: {}
+    },
+    single_line_text: {
+        ...defaultObject,
+        type: 'single_line_text'
+    },
+    url: {
+        ...defaultObject,
+        type: 'url'
+    },
+    yes_no: {
+        ...defaultObject,
+        type: 'yes_no'
+    },
+}
+
+export {uniqueAttributes, allTypeAttributes, defaultAttributes, booleanTypeAttributes, allDefaultObjects}

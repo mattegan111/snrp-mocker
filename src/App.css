@@ -29,7 +29,7 @@ p {
   background-color: #ffffff;
   color: #0682ff;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 10px 12% 10px 12%;
 }
 
@@ -46,8 +46,13 @@ p {
   padding: 0px 10px 0px 10px;
 }
 
+.header-category {
+  margin-right: 14px;
+}
+
 .search-bar {
   padding: 7px;
+  margin-left: auto;
 }
 
 .search-bar input {
@@ -77,21 +82,65 @@ p {
 }
 
 .editing-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   height: 100%;
-  width: 0;
+  width: 0px;
   position: fixed;
   z-index: 1;
   top: 0;
   right: 0;
-  background-color: rgb(205, 224, 249);
+  background-color: rgba(205, 224, 249, 0.9);
   overflow-x: hidden;
-  transition: 0.1s;
-  padding-top: 60px;
+  overflow-y: auto;
+  transition: 0.05s;
   color: black;
+  padding-top: 10px;
 }
 
 .editing-sidebar.open {
-  width: 250px;
+  width: 380px;
+}
+
+.editing-sidebar.open-large {
+  width: 560px;
+}
+
+.white-inner-box {
+  flex-grow: 1;
+  background-color: white;
+  width: 93%;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 20px;
+}
+
+.editing-fields-div {
+  padding: 20px;
+}
+
+.editing-fields-div > * {
+  margin: 8px 8px 12px 8px;
+}
+
+.editing-field-input {
+  padding: 7px;
+}
+
+.editing-label {
+  font-size: 12px;
+  margin: 4px 0px 4px 0px;
+}
+
+.btn-b {
+  background-color: white;
+  border: 0;
+  border-radius: 100px;
+  padding: 5px 8px 5px 8px;
+  margin: 2px 1px 5px 1px;
+  width: 120px;
 }
 
 .read-only-style {
@@ -210,4 +259,39 @@ p {
   padding: 0px;
   font-size: 10px;
   color: violet;
+}
+
+.btn-a {
+  background-color: rgb(205, 224, 249);
+  border: 0;
+  border-radius: 100px;
+  padding: 6px 8px 6px 8px;
+  margin: 10px 1px 5px 1px;
+  width: 120px;
+}
+
+.btn-a-wide {
+  background-color: rgb(205, 224, 249);
+  border: 0;
+  border-radius: 100px;
+  padding: 6px 8px 6px 8px;
+  margin: 10px 5px 5px 5px;
+  width: 120px;
+}
+
+.btn-a-small {
+  font-size: 10px;
+  background-color: rgb(205, 224, 249);
+  border: 0;
+  border-radius: 100px;
+  padding: 6px 8px 6px 8px;
+  margin: 2px 1px 5px 1px;
+}
+
+.display-block {
+  display: block;
+}
+
+.option-container {
+  padding: 10px;
 }
