@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import './App.css';
 import { data as dataImport } from './data';
 import { uniqueAttributes, allTypeAttributes, defaultAttributes, booleanTypeAttributes, allDefaultObjects } from './typeAttributes';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { convertSnakeToTitle, convertTitleToSnake} from './utils'
 
 const AppContext = createContext();
@@ -16,6 +16,7 @@ function App() {
   const [editingField, setEditingField] = useState();
   const [editingPane, setEditingPane] = useState('');
   const [typeAttributes, setTypeAttributes] = useState([]);
+  const [flash, setFlash] = useState(false);
   const [data, setData] = useState(dataImport);
 
   return (
@@ -36,7 +37,9 @@ function App() {
         uniqueAttributes,
         defaultAttributes,
         booleanTypeAttributes,
-        allDefaultObjects
+        allDefaultObjects,
+        flash,
+        setFlash
       }}>
     <div className="App">
       <Header />
@@ -157,7 +160,7 @@ function FormDetailsField({objKey}) {
 }
 
 function EditingSidebarForFields() {
-  const { data, setData, typeAttributes, editingField, setEditingField, openEditingSidebar, toggleEditingSidebar, allDefaultObjects } = useContext(AppContext);
+  const { data, setData, typeAttributes, editingField, setEditingField, openEditingSidebar, toggleEditingSidebar, allDefaultObjects, flash } = useContext(AppContext);
 
   function onChange(e, key) {
     function setNestedObjectValues(targetObj, path, value) {
@@ -195,6 +198,63 @@ function EditingSidebarForFields() {
       fields: {
         ...data.fields,
         [editingField.id]: {
+          ...newEditingField
+        }
+      }
+    });
+  }
+
+  function onChangeShowHelp(e){
+    const newEditingField = { ...editingField,
+      annotation: {
+        ...editingField.annotation,
+        show_help: e.target.checked
+      }
+    };
+    setEditingField({...newEditingField});
+
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [newEditingField.id]: {
+          ...newEditingField
+        }
+      }
+    });
+  }
+
+  function onChangeAlwaysExpanded(e){
+    const newEditingField = { ...editingField,
+      annotation: {
+        ...editingField.annotation,
+        always_expanded: e.target.checked
+      }
+    };
+    setEditingField({...newEditingField});
+
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [newEditingField.id]: {
+          ...newEditingField
+        }
+      }
+    });
+  }
+
+  function onChangeActive(e) {
+    const newEditingField = { ...editingField,
+      active: e.target.checked
+    };
+    setEditingField({...newEditingField});
+
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [newEditingField.id]: {
           ...newEditingField
         }
       }
@@ -271,18 +331,10 @@ function EditingSidebarForFields() {
 
   return (
     <div className={openEditingSidebar ? 'editing-sidebar open' : 'editing-sidebar'}>
-      <div className='white-inner-box'>
+      <div className={`white-inner-box ${flash ? 'flash-animation' : ''}`}>
         {editingField && (
           <div className='editing-fields-div'>
             {editingField.id}
-            <div className='display-flex-column'>
-              <label className='editing-label'>Question text</label>
-              <input
-                className='editing-field-input'
-                value={editingField.question.question_text}
-                onChange={(e) => onChange(e, 'question.question_text')}
-              />
-            </div>
             <div className='display-flex-column'>
               <label className='editing-label'>Name (system-only)</label>
               <input
@@ -291,22 +343,14 @@ function EditingSidebarForFields() {
                 readOnly={true}
               />
             </div>
-            {typeAttributes.includes('type') && (
-              <div className='display-flex-column'>
-                <label className='editing-label'>Type</label>
-                <select
-                  className='editing-field-input'
-                  value={editingField.type}
-                  onChange={(e) => onTypeChange(e)}
-                >
-                  {Object.keys(allTypeAttributes).map((type, index) =>
-                    <option key={`type-option-${index}`} value={type}>
-                      {convertSnakeToTitle(type)}
-                    </option>
-                  )}
-                </select>
-              </div>
-            )}
+            <div className='display-flex-column'>
+              <label className='editing-label'>Question text</label>
+              <input
+                className='editing-field-input'
+                value={editingField.question.question_text}
+                onChange={(e) => onChange(e, 'question.question_text')}
+              />
+            </div>
             {typeAttributes.includes('mandatory') && (
               <div className='display-flex'>
                 <input
@@ -314,7 +358,7 @@ function EditingSidebarForFields() {
                   checked={editingField.mandatory}
                   type='checkbox'
                   onChange={(e) => onChangeMandatory(e)}
-                />
+                  />
                 <label className='editing-label'>Mandatory</label>
               </div>
             )}
@@ -324,8 +368,8 @@ function EditingSidebarForFields() {
                   className='editing-field-input'
                   checked={editingField.annotation.show_help}
                   type='checkbox'
-                  onChange={(e) => onChange(e, 'annotation.show_help')}
-                />
+                  onChange={(e) => onChangeShowHelp(e)}
+                  />
                 <label className='editing-label'>Show help</label>
               </div>
             )}
@@ -336,11 +380,11 @@ function EditingSidebarForFields() {
                     className='editing-field-input'
                     checked={editingField.annotation.always_expanded}
                     type='checkbox'
-                    onChange={(e) => onChange(e, 'annotation.always_expanded')}
-                  />
+                    onChange={(e) => onChangeAlwaysExpanded(e)}
+                    />
                   <label className='editing-label'>Always expanded</label>
                 </div>
-              )}
+            )}
             {typeAttributes.includes('annotation.help_tag')
               && editingField.annotation.show_help && (
                 <div className='display-flex-column'>
@@ -349,9 +393,9 @@ function EditingSidebarForFields() {
                     className='editing-field-input'
                     value={editingField.annotation.help_tag}
                     onChange={(e) => onChange(e, 'annotation.help_tag')}
-                  />
+                    />
                 </div>
-              )}
+            )}
             {typeAttributes.includes('question_choices') && (
               <div className='display-flex-column'>
                 <label className='editing-label'>Question choices</label>
@@ -365,11 +409,11 @@ function EditingSidebarForFields() {
                           type='text' 
                           value={editingField.question_choices[key].value} 
                           onChange={(e) => handleEditOptions(editingField.question_choices[key].id, e)}
-                        />
+                          />
                         <button 
                           className='btn-a-small'
                           onClick={() => handleOptionDelete(editingField.question_choices[key].id)}
-                        >
+                          >
                           Delete
                         </button>
                       </div>
@@ -384,7 +428,7 @@ function EditingSidebarForFields() {
                 <input
                   value={editingField.comments_for_developers}
                   onChange={(e) => onChange(e, 'annotation.comments_for_developers')}
-                />
+                  />
               </div>
             )}
             {typeAttributes.includes('annotation.impacts_reporting') && (
@@ -393,16 +437,7 @@ function EditingSidebarForFields() {
                 <input
                   value={editingField.impacts_reporting}
                   onChange={(e) => onChange(e, 'annotation.impacts_reporting')}
-                />
-              </div>
-            )}
-            {typeAttributes.includes('annotation.active') && (
-              <div className='display-flex-column'>
-                <label className='editing-label'>Active</label>
-                <input
-                  value={editingField.active}
-                  onChange={(e) => onChange(e, 'annotation.active')}
-                />
+                  />
               </div>
             )}
             {typeAttributes.includes('annotation.fields_to_include') && (
@@ -411,7 +446,34 @@ function EditingSidebarForFields() {
                 <input
                   value={editingField.fields_to_include}
                   onChange={(e) => onChange(e, 'annotation.fields_to_include')}
-                />
+                  />
+              </div>
+            )}
+            {typeAttributes.includes('type') && (
+              <div className='display-flex-column'>
+                <label className='editing-label'>Type</label>
+                <select
+                  className='editing-field-input'
+                  value={editingField.type}
+                  onChange={(e) => onTypeChange(e)}
+                  >
+                  {Object.keys(allTypeAttributes).map((type, index) =>
+                    <option key={`type-option-${index}`} value={type}>
+                      {convertSnakeToTitle(type)}
+                    </option>
+                  )}
+                </select>
+              </div>
+            )}
+            {typeAttributes.includes('active') && (
+              <div className='display-flex'>
+                <input
+                    className='editing-field-input'
+                    checked={editingField.active}
+                    type='checkbox'
+                    onChange={(e) => onChangeActive(e)}
+                    />
+                <label className='editing-label'>Active</label>
               </div>
             )}
             <button className='btn-a' onClick={toggleEditingSidebar}>Close</button>
@@ -594,8 +656,6 @@ function Group({ group, fields }) {
     const newField = cloneDeep(allDefaultObjects[typeSnakeCase]);
     newField.id = newFieldId;
 
-    console.log(newField)
-
     setTypeAttributes(allTypeAttributes[typeSnakeCase]);
     setEditingField(newField);
     setData(prevData => ({
@@ -681,13 +741,24 @@ function Field({ field, index }) {
     openEditingSidebar,
     setOpenEditingSidebar,
     toggleEditingSidebar,
-    allTypeAttributes
+    allTypeAttributes,
+    setFlash
   } = useContext(AppContext);
+  const [helpClicked, setHelpClicked] = useState(false);
   const fieldClass = field.type_specifications.variable_width === '100%' ? 'full-width' : 'half-width';// TODO fix prop undefined
-
+  
   function handleOnClick(e) {
     e.preventDefault();
+
+    if(openEditingSidebar){
+      setFlash(true);
+      setTimeout(() => {
+        setFlash(false);
+      }, 500)
+    }
+
     setTypeAttributes(allTypeAttributes[field.type.replaceAll(' ', '_').toLowerCase()]);
+
     if (editingField == field && editingPane === 'field') {
       toggleEditingSidebar();
     } else {
@@ -695,6 +766,11 @@ function Field({ field, index }) {
       setEditingField(field);
       setOpenEditingSidebar(true);
     }
+  }
+
+  function handleHelpClick(e) {
+    e.stopPropagation();
+    setHelpClicked(!helpClicked);
   }
 
   // Handle for CheckBox as the template below doesn't suit the required layout for this type
@@ -726,7 +802,10 @@ function Field({ field, index }) {
             >
               <label className={`field-label ${field.mandatory ? 'required' : ''}`}>
                 {field.question.question_text}
-                {field.annotation.show_help ?
+                {field.annotation.show_help && (
+                  <div className='help-icon' onClick={handleHelpClick}>?</div>
+                )}
+                {field.annotation.show_help && (helpClicked || field.annotation.always_expanded) ?
                   <p className='help-tag'>{field.annotation.help_tag}</p> : ''
                 }
               </label>
@@ -740,7 +819,6 @@ function Field({ field, index }) {
 }
 
 function Input({ field }) {
-  console.log(field)
   switch (field.type) {
     case 'single_line_text':
       return <input type='text' className='full-width field-input' />;

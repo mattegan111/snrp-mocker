@@ -81,6 +81,15 @@ p {
   margin: 20px;
 }
 
+@keyframes flash {
+  from { background-color: rgba(205, 224, 249, 0.9); }
+  to { background-color: #ffffff; }
+}
+
+.flash-animation {
+  animation: flash 0.2s ease-out;
+}
+
 .editing-sidebar {
   display: flex;
   flex-direction: column;
@@ -232,6 +241,22 @@ p {
 .field-label {
   display: block;
   font-size: 14px;
+}
+
+.help-icon {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 900;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #6c757d;
+  color: white;
+  text-align: center;
+  line-height: 15px;
+  margin-left: 5px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .field-input {

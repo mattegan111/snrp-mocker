@@ -51,10 +51,27 @@ const richTextLabelObject = {
         rich_text: ''
     },
 
-    annotation: {
-        show_help: false,
-        always_expanded: false,
-        help_tag: ''
+    type_specifications: {
+        variable_width: '100%'
+    },
+
+    comments_for_developers: '',
+
+    impacts_reporting: false
+}
+
+const checkboxObject = {
+    id: '',
+    map_to_field: false,
+    field_to_map_to: '',
+    type: '',
+    mandatory: false,
+    active: true,
+
+    question: {
+        question_text: '',
+        name: '',
+        rich_text: ''
     },
 
     type_specifications: {
@@ -127,7 +144,7 @@ const allDefaultObjects = {
         type: 'attachment'
     },
     checkbox: {
-        ...defaultObject,
+        ...checkboxObject,
         type: 'checkbox'
     },
     date: {
