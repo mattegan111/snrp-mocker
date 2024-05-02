@@ -176,11 +176,13 @@ export const data = {
     groups: {
         'group-1': {
             id: 'group-1',
+            title: 'Request detail',
             column_count: 2,
             fieldIds: ['field-1', 'field-5', 'field-6']
         },
         'group-2': {
             id: 'group-2',
+            title: '',
             column_count: 1,
             fieldIds: ['field-2', 'field-3']
         }

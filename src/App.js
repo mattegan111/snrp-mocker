@@ -87,7 +87,7 @@ function TopBar() {
             <h3>Visibility</h3>
             <div className='top-bar-buttons'>
               <button className='btn-a-small side-margin-5'onClick={() => setHideEditingTools(!hideEditingTools)}>
-                {hideEditingTools ? 'Hide Editing Tools' : 'Show Editing Tools'}
+                {hideEditingTools ? 'Show Editing Tools' : 'Hide Editing Tools'}
               </button>
             </div>
           </div> 
@@ -192,18 +192,19 @@ function EditingSidebar() {
     <>
       {editingPane === 'field' ? 
         <EditingSidebarForFields /> : editingPane === 'form' ?
-        <EditingSidebarForFormDetails /> : null
+        <EditingSidebarForFormDetails /> : editingPane === 'group' ?
+        <EditingSidebarForGroups /> : null
       }
     </>
   );
 }
 
 function EditingSidebarForFormDetails() {
-  const {data, openEditingSidebar, setOpenEditingSidebar} = useContext(AppContext);
+  const {data, openEditingSidebar, setOpenEditingSidebar, hideEditingTools} = useContext(AppContext);
 
   return (
-    <div className={openEditingSidebar ? 'editing-sidebar open-large' : 'editing-sidebar'}>
-      <div className='white-inner-box'>
+    <div className={openEditingSidebar && !hideEditingTools ? 'editing-sidebar open-large' : 'editing-sidebar'}>
+      <div className={'white-inner-box'}>
         <div className='editing-fields-div'>
           {
             Object.keys(data.form).map(objKey => (
@@ -242,9 +243,54 @@ function FormDetailsField({objKey}) {
   )
 }
 
+function EditingSidebarForGroups() {
+  const {data, setData, editingField, openEditingSidebar, setOpenEditingSidebar, hideEditingTools, flash} = useContext(AppContext);
+
+  function handleTitleChange(e){
+    setData({
+      ...data,
+      groups: {
+        ...data.groups,
+        [data.groups[editingField.id].id]: {
+          ...data.groups[editingField.id],
+          title: e.target.value
+        }
+      }
+    });
+  }
+
+
+  return (
+    
+    <div className={openEditingSidebar && !hideEditingTools ? 'editing-sidebar open' : 'editing-sidebar'}>
+      <div className={`white-inner-box ${flash ? 'flash-animation' : ''}`}>
+        <div className='editing-fields-div'>
+          <p>{editingField.id}</p>
+          <div className='display-flex-column'>
+            <label className='editing-label'>Title</label>
+            <input
+              className='editing-field-input'
+              value={data.groups[editingField.id].title}
+              onChange={(e) => handleTitleChange(e)}
+            />
+          </div>
+          <div className='display-flex-column'>
+            <label className='editing-label'>Column Count</label>
+            <select>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+            </select>
+          </div>
+          <button className='btn-a' onClick={() => setOpenEditingSidebar(false)}>Close</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function EditingSidebarForFields() {
   const { data, setData, typeAttributes, editingField, setEditingField, openEditingSidebar, hideEditingTools, toggleEditingSidebar, allDefaultObjects, flash } = useContext(AppContext);
-
+  
   function onChange(e, key) {
     function setNestedObjectValues(targetObj, path, value) {
       const keys = path.split('.');
@@ -682,27 +728,28 @@ function MainContent() {
 }
 
 function GroupList({ provided, data }) {
-  return (<div
-    ref={provided.innerRef}
-    {...provided.droppableProps}>
-    {data.groupsOrder.map((groupId, index) => {
-      return (
-
-        <Draggable key={`dc-${groupId}`} draggableId={groupId} index={index}>
-          {(provided) => (
-            <div
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              ref={provided.innerRef}
-            >
-              <GroupContainer groups={data.groups} groupId={groupId} fields={data.fields} />
-            </div>
-          )}
-        </ Draggable>
-      )
-    })}
-    {provided.placeholder}
-  </div>)
+  return (
+    <div
+      ref={provided.innerRef}
+      {...provided.droppableProps}>
+      {data.groupsOrder.map((groupId, index) => {
+        return (
+          <Draggable key={`dc-${groupId}`} draggableId={groupId} index={index}>
+            {(provided) => (
+              <div
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
+              >
+                <GroupContainer groups={data.groups} groupId={groupId} fields={data.fields} />
+              </div>
+            )}
+          </ Draggable>
+        )
+      })}
+      {provided.placeholder}
+    </div>
+  )
 }
 
 function GroupContainer({ groups, groupId, fields }) {
@@ -712,7 +759,7 @@ function GroupContainer({ groups, groupId, fields }) {
 }
 
 function Group({ group, fields }) {
-  const {data, setData, setEditingField, hideEditingTools, setTypeAttributes, setOpenEditingSidebar, allDefaultObjects} = useContext(AppContext)
+  const {data, setData, editingField, setEditingField, editingPane, setEditingPane, hideEditingTools, setTypeAttributes, openEditingSidebar, setOpenEditingSidebar, setFlash, allDefaultObjects} = useContext(AppContext)
   const [clickedAddButton, setClickedAddButton] = useState(false);
 
   function handleTypeClick(e) {
@@ -740,6 +787,7 @@ function Group({ group, fields }) {
     const newGroup= {
         id: newGroupIdStr,
         column_count: 1,
+        title: '',
         fieldIds: []
     };
 
@@ -754,6 +802,24 @@ function Group({ group, fields }) {
       },
       groupsOrder: newGroupsOrder
     });
+  }
+
+  function handleEditGroupClick(groupId, e) {
+    if(openEditingSidebar){
+      setFlash(true);
+      setTimeout(() => {
+        setFlash(false);
+      }, 500)
+    }
+
+
+    if(editingPane === 'group' && editingField.id === groupId && openEditingSidebar){
+      setOpenEditingSidebar(false);
+    } else{
+      setEditingPane('group');
+      setEditingField(data.groups[groupId]);
+      setOpenEditingSidebar(true)
+    }
   }
 
   function newField(type) {
@@ -791,11 +857,12 @@ function Group({ group, fields }) {
   return (
   <div className={hideEditingTools ? 'hidden-container' : 'group-container'}>
     {!hideEditingTools && (
-      <p className='purple-text'>{group.id}</p>
+      <p className='purple-text' onClick={() => handleEditGroupClick(group.id)}>{group.id}</p>
     )}
     <Droppable droppableId={group.id} type='field'>
       {(provided) => (
         <>
+          {group.title.length > 0 ? <p className='group-title'>{group.title}</p> : null}
           <FieldList provided={provided} fields={fields} />
           <div>
             {!hideEditingTools && (

@@ -372,6 +372,12 @@ h3 {
   color: rgb(171, 194, 223);
 }
 
+.group-title {
+  font-size: 18px;
+  padding: 0px 0px 3px 5px;
+  margin: 0px 0px 0px 0px;
+}
+
 .btn-a {
   background-color: rgb(205, 224, 249);
   border: 0;
