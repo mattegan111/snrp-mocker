@@ -712,9 +712,37 @@ function Group({ group, fields }) {
     newField(e.target.value);
   }
 
+  function handleAddGroup(e) {
+    let newGroupIdNum = 0;
+    let newGroupIdStr = '';
+    Object.keys(data.groups).forEach((group, i) => {
+      if(data.groups[group].id.replace('group-', '') > newGroupIdNum){
+        newGroupIdNum = Number(data.groups[group].id.replace('group-', ''));
+      }
+      newGroupIdStr = `group-${newGroupIdNum + 1}`
+    });
+
+    const newGroup= {
+        id: newGroupIdStr,
+        column_count: 1,
+        fieldIds: []
+    };
+    const newGroupsOrder = [...data.groupsOrder];
+    newGroupsOrder.push(newGroupIdStr);
+    
+    setData({
+      ...data,
+      groups: {
+        ...data.groups,
+        [newGroup.id]: {...newGroup},
+      },
+      groupsOrder: newGroupsOrder
+    });
+  }
+
   function newField(type) {
     const typeSnakeCase = type.toLowerCase().split(' ').join('_');
-    let highestIndex = 0
+    let highestIndex = 0;
     Object.keys(data.fields).forEach(id => {
       const numericId = Number(id.replace('field-', '')) + 1;
       if(numericId > highestIndex){
@@ -779,6 +807,7 @@ function Group({ group, fields }) {
                 </div>
               </>
             )}
+            <button className='btn-a-wide' onClick={handleAddGroup}> Add Group</button>
           </div>
         </>
       )}
