@@ -140,7 +140,11 @@ function Header() {
   const {data, editingPane, setEditingPane, openEditingSidebar, setOpenEditingSidebar} = useContext(AppContext);
 
   function handleOnClick(){
-    if(editingPane === 'field' && openEditingSidebar || !openEditingSidebar){
+    console.log('editingPane')
+    console.log(editingPane)
+    console.log('openEditingSidebar')
+    console.log(openEditingSidebar)
+    if(editingPane !== 'form' && openEditingSidebar || !openEditingSidebar){
       setOpenEditingSidebar(true);
     } else{
       setOpenEditingSidebar(false);
@@ -696,7 +700,7 @@ function MainContent() {
   }
 
   function handleOnClick(){
-    if(editingPane === 'field' && openEditingSidebar || !openEditingSidebar){
+    if(editingPane !== 'form' && openEditingSidebar || !openEditingSidebar){
       setOpenEditingSidebar(true);
     } else{
       setOpenEditingSidebar(false);
@@ -811,7 +815,6 @@ function Group({ group, fields }) {
         setFlash(false);
       }, 500)
     }
-
 
     if(editingPane === 'group' && editingField.id === groupId && openEditingSidebar){
       setOpenEditingSidebar(false);
