@@ -353,8 +353,16 @@ h3 {
   font-size: 14px;
 }
 
-.purple-border {
+.group-container {
   border: 2px dotted rgb(171, 194, 223);
+}
+
+.hidden-container {
+  visibility: hidden;
+}
+
+.hidden-container > * {
+  visibility: visible;
 }
 
 .purple-text {

@@ -9,15 +9,16 @@ import { convertSnakeToTitle, convertTitleToSnake} from './utils'
 const AppContext = createContext();
 
 function App() {
+  const [data, setData] = useState(dataImport);
   const [openEditingSidebar, setOpenEditingSidebar] = useState(false);
   const toggleEditingSidebar = () => {
     setOpenEditingSidebar(!openEditingSidebar)
   };
   const [editingField, setEditingField] = useState();
   const [editingPane, setEditingPane] = useState('');
+  const [hideEditingTools, setHideEditingTools] = useState(false)
   const [typeAttributes, setTypeAttributes] = useState([]);
   const [flash, setFlash] = useState(false);
-  const [data, setData] = useState(dataImport);
 
   return (
     <AppContext.Provider value={
@@ -39,7 +40,9 @@ function App() {
         booleanTypeAttributes,
         allDefaultObjects,
         flash,
-        setFlash
+        setFlash,
+        hideEditingTools,
+        setHideEditingTools
       }}>
     <div className="App">
       <div className='main-container'>
@@ -57,6 +60,7 @@ function App() {
 }
 
 function TopBar() {
+  const {hideEditingTools, setHideEditingTools} = useContext(AppContext);
   return (
     <div className="top-bar">
       <div className='inner-top-bar'>
@@ -76,6 +80,15 @@ function TopBar() {
               <button className='btn-a-small side-margin-5'>Portal</button>
               <button className='btn-a-small side-margin-5'>Case</button>
               <button className='btn-a-small side-margin-5'>Deleted Data</button>
+            </div>
+          </div> 
+          <div className='vertical-split'/>
+          <div className="top-bar-category">
+            <h3>Visibility</h3>
+            <div className='top-bar-buttons'>
+              <button className='btn-a-small side-margin-5'onClick={() => setHideEditingTools(!hideEditingTools)}>
+                {hideEditingTools ? 'Hide Editing Tools' : 'Show Editing Tools'}
+              </button>
             </div>
           </div> 
           <div className='vertical-split'/>
@@ -230,7 +243,7 @@ function FormDetailsField({objKey}) {
 }
 
 function EditingSidebarForFields() {
-  const { data, setData, typeAttributes, editingField, setEditingField, openEditingSidebar, toggleEditingSidebar, allDefaultObjects, flash } = useContext(AppContext);
+  const { data, setData, typeAttributes, editingField, setEditingField, openEditingSidebar, hideEditingTools, toggleEditingSidebar, allDefaultObjects, flash } = useContext(AppContext);
 
   function onChange(e, key) {
     function setNestedObjectValues(targetObj, path, value) {
@@ -400,7 +413,7 @@ function EditingSidebarForFields() {
   }
 
   return (
-    <div className={openEditingSidebar ? 'editing-sidebar open' : 'editing-sidebar'}>
+    <div className={openEditingSidebar && !hideEditingTools ? 'editing-sidebar open' : 'editing-sidebar'}>
       <div className={`white-inner-box ${flash ? 'flash-animation' : ''}`}>
         {editingField && (
           <div className='editing-fields-div'>
@@ -699,7 +712,7 @@ function GroupContainer({ groups, groupId, fields }) {
 }
 
 function Group({ group, fields }) {
-  const {data, setData, setEditingField, setTypeAttributes, setOpenEditingSidebar, allDefaultObjects} = useContext(AppContext)
+  const {data, setData, setEditingField, hideEditingTools, setTypeAttributes, setOpenEditingSidebar, allDefaultObjects} = useContext(AppContext)
   const [clickedAddButton, setClickedAddButton] = useState(false);
 
   function handleTypeClick(e) {
@@ -712,7 +725,9 @@ function Group({ group, fields }) {
     newField(e.target.value);
   }
 
-  function handleAddGroup(e) {
+  function handleAddGroup(group, e) {
+    const insertAtIndex = data.groupsOrder.indexOf(group.id);
+
     let newGroupIdNum = 0;
     let newGroupIdStr = '';
     Object.keys(data.groups).forEach((group, i) => {
@@ -727,8 +742,9 @@ function Group({ group, fields }) {
         column_count: 1,
         fieldIds: []
     };
+
     const newGroupsOrder = [...data.groupsOrder];
-    newGroupsOrder.push(newGroupIdStr);
+    newGroupsOrder.splice(insertAtIndex + 1, 0, newGroupIdStr);
     
     setData({
       ...data,
@@ -772,47 +788,54 @@ function Group({ group, fields }) {
     setOpenEditingSidebar(true);
   }
 
-  return <div className='purple-border'>
-    <p className='purple-text'>{group.id}</p>
+  return (
+  <div className={hideEditingTools ? 'hidden-container' : 'group-container'}>
+    {!hideEditingTools && (
+      <p className='purple-text'>{group.id}</p>
+    )}
     <Droppable droppableId={group.id} type='field'>
       {(provided) => (
         <>
           <FieldList provided={provided} fields={fields} />
           <div>
-            <button className='btn-a-wide' onClick={() => {
-              setClickedAddButton(!clickedAddButton)
-            }}>
-              Add Field
-            </button>
-            {clickedAddButton && (
+            {!hideEditingTools && (
               <>
-                <button className='btn-a' onClick={handleTypeClick} value='Single Line Text'>Single Line Text</button>
-                <button className='btn-a' onClick={handleTypeClick} value='Select Box'>Select Box</button>
-                <button className='btn-a' onClick={handleTypeClick} value='Multiple Choice'>Multiple Choice</button>
-                <button className='btn-a' onClick={handleTypeClick} value='Rich Text Label'>Rich Text Label</button>
-                <button className='btn-a' onClick={handleTypeClick} value='Checkbox'>Checkbox</button>
-                <div className='display-flex'>
-                  <select value='' onChange={handleSelectType}>
-                    <option value='' disabled selected>More field types...</option>
-                    <option value='Attachment'>Attachment</option>
-                    <option value='Date'>Date</option>
-                    <option value='Email'>Email</option>
-                    <option value='Label'>Label</option>
-                    <option value='Lookup Select Box'>Lookup Select Box</option>
-                    <option value='Multi Line Text'>Multi Line Text</option>
-                    <option value='Reference'>Reference</option>
-                    <option value='Url'>Url</option>
-                    <option value='Yes No'>Yes No</option>
-                  </select>
-                </div>
-              </>
+                <button className='btn-a-wide' onClick={() => {
+                  setClickedAddButton(!clickedAddButton)
+                }}>
+                  Add Field
+                </button>
+                {clickedAddButton && (
+                  <>
+                    <button className='btn-a' onClick={handleTypeClick} value='Single Line Text'>Single Line Text</button>
+                    <button className='btn-a' onClick={handleTypeClick} value='Select Box'>Select Box</button>
+                    <button className='btn-a' onClick={handleTypeClick} value='Multiple Choice'>Multiple Choice</button>
+                    <button className='btn-a' onClick={handleTypeClick} value='Rich Text Label'>Rich Text Label</button>
+                    <button className='btn-a' onClick={handleTypeClick} value='Checkbox'>Checkbox</button>
+                    <div className='display-flex'>
+                      <select value='' onChange={handleSelectType}>
+                        <option value='' disabled selected>More field types...</option>
+                        <option value='Attachment'>Attachment</option>
+                        <option value='Date'>Date</option>
+                        <option value='Email'>Email</option>
+                        <option value='Label'>Label</option>
+                        <option value='Lookup Select Box'>Lookup Select Box</option>
+                        <option value='Multi Line Text'>Multi Line Text</option>
+                        <option value='Reference'>Reference</option>
+                        <option value='Url'>Url</option>
+                        <option value='Yes No'>Yes No</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+                <button className='btn-a-wide' onClick={() => handleAddGroup(group)}> Add Group</button>
+              </> 
             )}
-            <button className='btn-a-wide' onClick={handleAddGroup}> Add Group</button>
           </div>
         </>
       )}
     </Droppable>
-  </div>
+  </div>)
 }
 
 function FieldList({ fields, provided }) {
