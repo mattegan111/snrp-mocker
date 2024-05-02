@@ -1,5 +1,18 @@
+:root {
+  --topbar-height: 120px;
+}
+
+body {
+  overscroll-behavior: none; 
+}
+
 p {
   font-size: 14px;
+}
+
+select {
+  padding: 2px;
+  border-radius: 4px;
 }
 
 .App {
@@ -68,6 +81,10 @@ p {
 }
 
 .main-container {
+  padding-top: var(--topbar-height);
+}
+
+.headerless-container {
   display: flex;
   padding: 1% 12% 0% 12%;
   background-color: #eaeaea;
@@ -90,6 +107,70 @@ p {
   animation: flash 0.2s ease-out;
 }
 
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--topbar-height); 
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  background-color: #cde0f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.inner-top-bar {
+  display: flex;
+  justify-content: center;
+  background-color: #cde0f9;
+}
+
+.top-bar-categories{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 14px;
+}
+
+.top-bar-category {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 14px;
+}
+
+.vertical-split {
+  background-color: #cde0f9;
+  height: 70px;
+  width: 1px;
+}
+
+.top-bar-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-bar-select {
+  width: 100%;
+}
+
+h3 {
+  font-size: small;
+  color: #373b3e;
+  font-weight: 200;
+  /* text-decoration: underline; */
+}
+
 .editing-sidebar {
   display: flex;
   flex-direction: column;
@@ -99,14 +180,14 @@ p {
   width: 0px;
   position: fixed;
   z-index: 1;
-  top: 0;
+  top: var(--topbar-height);
+  padding-top: 20px;
   right: 0;
-  background-color: rgba(205, 224, 249, 0.9);
+  background-color: rgb(205, 224, 249);
   overflow-x: hidden;
   overflow-y: auto;
   transition: 0.05s;
   color: black;
-  padding-top: 10px;
 }
 
 .editing-sidebar.open {
@@ -123,7 +204,7 @@ p {
   width: 93%;
   padding: 0px;
   margin: 0px;
-  border-radius: 20px;
+  border-radius: 14px;
 }
 
 .editing-fields-div {
@@ -313,10 +394,18 @@ p {
   margin: 2px 1px 5px 1px;
 }
 
+[class^="btn-a"]:hover {
+  background-color: rgb(226, 238, 254);
+}
+
 .display-block {
   display: block;
 }
 
 .option-container {
   padding: 10px;
+}
+
+.side-margin-5 {
+  margin: 0px 5px 0px 5px;
 }

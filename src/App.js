@@ -42,14 +42,84 @@ function App() {
         setFlash
       }}>
     <div className="App">
-      <Header />
-      <div className="main-container">
-        <MainContent />
-        <SubmitPanel />
-        <EditingSidebar />
+      <div className='main-container'>
+        <TopBar />
+        <Header />
+        <div className="headerless-container">
+          <MainContent />
+          <SubmitPanel />
+          <EditingSidebar />
+        </div>
       </div>
     </div>
   </AppContext.Provider>
+  );
+}
+
+function TopBar() {
+  return (
+    <div className="top-bar">
+      <div className='inner-top-bar'>
+        <div className='top-bar-categories'>
+          <div className="top-bar-category">
+            <h3>Project</h3>
+            <div className='top-bar-buttons'>
+              <button className='btn-a-small side-margin-5'>Open</button>
+              <button className='btn-a-small side-margin-5'>Save</button>
+            </div>
+          </div>
+          <div className='vertical-split'/>
+          <div className="top-bar-category">
+            <h3>View</h3>
+            <div className='top-bar-buttons'>
+              <button className='btn-a-small side-margin-5'>Key Requirements</button>
+              <button className='btn-a-small side-margin-5'>Portal</button>
+              <button className='btn-a-small side-margin-5'>Case</button>
+              <button className='btn-a-small side-margin-5'>Deleted Data</button>
+            </div>
+          </div> 
+          <div className='vertical-split'/>
+          <div className="top-bar-category">
+            <h3>Layouts</h3>
+              <div className='top-bar-buttons'>
+                <select className='side-margin-5'>
+                  <option>Layout 1</option>
+                  <option>Layout 2</option>
+                </select>
+                <button className='btn-a-small side-margin-10'>Save Layout</button>
+              </div>
+          </div>
+          <div className='vertical-split'/>
+          <div className="top-bar-category">
+            <h3>Versioning</h3>
+              <div className='top-bar-buttons'>
+                <select className='side-margin-5'>
+                  <option>Version 1</option>
+                  <option>Version 2</option>
+                </select>
+                <button className='btn-a-small side-margin-5'>Save New Version</button>
+                <button className='btn-a-small side-margin-5'>Save New Iteration</button>
+                <button className='btn-a-small side-margin-5'>Delete...</button>
+              </div>
+          </div>
+          <div className='vertical-split'/>
+          <div className="top-bar-category">
+            <h3>Export Diff</h3>
+            <div className='top-bar-buttons'>              
+              <select className='side-margin-5'>
+                <option>Version 1</option>
+                <option>Version 2</option>
+              </select>
+              <select className='side-margin-5'>
+                <option>Version 1</option>
+                <option>Version 2</option>
+              </select>
+              <button className='btn-a-small side-margin-5'>Export</button>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -334,7 +404,6 @@ function EditingSidebarForFields() {
       <div className={`white-inner-box ${flash ? 'flash-animation' : ''}`}>
         {editingField && (
           <div className='editing-fields-div'>
-            {editingField.id}
             <div className='display-flex-column'>
               <label className='editing-label'>Name (system-only)</label>
               <input
