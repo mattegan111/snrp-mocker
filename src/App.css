@@ -176,6 +176,10 @@ h3 {
   /* text-decoration: underline; */
 }
 
+.small-text {
+  font-size: 10px;
+}
+
 .editing-sidebar {
   display: flex;
   flex-direction: column;

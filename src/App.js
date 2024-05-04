@@ -9,7 +9,33 @@ import { convertSnakeToTitle, convertTitleToSnake} from './utils'
 const AppContext = createContext();
 
 function App() {
-  const [data, setData] = useState(dataImport);
+  const [versionData, setVersionData] = useState(dataImport);
+
+  let latestVersionId = 1;
+  let latestIterationId = 1;
+  let allVersions = [];
+
+  Object.keys(dataImport.version).map(version => {
+    if(latestVersionId <= version){
+      latestVersionId = version
+    }
+  });
+  Object.keys(dataImport.version[latestVersionId].iteration).map(iteration => {
+    if(latestIterationId <= iteration){
+      latestIterationId = iteration
+    }
+  });
+  for (let v = 1; v <= latestVersionId; v++) {
+    for (let i = 1; i <= Object.keys(dataImport.version[v].iteration).length; i++) {
+      allVersions.push([v, i]);
+    }
+  }
+
+  const [currentVersion, setCurrentVersion] = useState([latestVersionId, latestIterationId]);
+  const [isCurrentVersion, setIsCurrentVersion] = useState(true)
+  const [allVersionsIterations, setAllVersionsIterations] = useState(allVersions);
+
+  const [data, setData] = useState(versionData.version[currentVersion[0]].iteration[currentVersion[1]]);
   const [openEditingSidebar, setOpenEditingSidebar] = useState(false);
   const toggleEditingSidebar = () => {
     setOpenEditingSidebar(!openEditingSidebar)
@@ -20,11 +46,30 @@ function App() {
   const [typeAttributes, setTypeAttributes] = useState([]);
   const [flash, setFlash] = useState(false);
 
+
+  useEffect(() => {
+    if(JSON.stringify(currentVersion) !== JSON.stringify([latestVersionId, latestIterationId])){
+      setHideEditingTools(true);
+      setIsCurrentVersion(false);
+    } else {
+      setHideEditingTools(false);
+      setIsCurrentVersion(true);
+    }
+  }, [currentVersion]);
+
   return (
     <AppContext.Provider value={
       {
         data,
         setData,
+        versionData,
+        setVersionData,
+        currentVersion,
+        setCurrentVersion,
+        isCurrentVersion,
+        setIsCurrentVersion,
+        allVersionsIterations,
+        setAllVersionsIterations,
         openEditingSidebar,
         setOpenEditingSidebar,
         typeAttributes,
@@ -60,7 +105,22 @@ function App() {
 }
 
 function TopBar() {
-  const {hideEditingTools, setHideEditingTools} = useContext(AppContext);
+  const {versionData, currentVersion, setCurrentVersion, isCurrentVersion, allVersionsIterations, setData, hideEditingTools, setHideEditingTools} = useContext(AppContext);
+
+  let latestVersionId = 1;
+  Object.keys(versionData.version).map(version => {
+    if(latestVersionId <= version){
+      latestVersionId = version
+    }
+  });
+
+  let latestIterationId = 1;
+  Object.keys(versionData.version[latestVersionId].iteration).map(iteration => {
+    if(latestIterationId <= iteration){
+      latestIterationId = iteration
+    }
+  });
+
   return (
     <div className="top-bar">
       <div className='inner-top-bar'>
@@ -86,9 +146,14 @@ function TopBar() {
           <div className="top-bar-category">
             <h3>Visibility</h3>
             <div className='top-bar-buttons'>
-              <button className='btn-a-small side-margin-5'onClick={() => setHideEditingTools(!hideEditingTools)}>
-                {hideEditingTools ? 'Show Editing Tools' : 'Hide Editing Tools'}
-              </button>
+              {isCurrentVersion && 
+                <button className='btn-a-small side-margin-5'onClick={() => setHideEditingTools(!hideEditingTools)}>
+                  {hideEditingTools ? 'Show Editing Tools' : 'Hide Editing Tools'}
+                </button>
+              }
+              {!isCurrentVersion &&
+                <p className='small-text'>Only the latest version is editable</p>
+              }
             </div>
           </div> 
           <div className='vertical-split'/>
@@ -106,10 +171,17 @@ function TopBar() {
           <div className="top-bar-category">
             <h3>Versioning</h3>
               <div className='top-bar-buttons'>
-                <select className='side-margin-5'>
-                  <option>Version 1</option>
-                  <option>Version 2</option>
-                </select>
+              <select className='side-margin-5' onChange={(e) => {
+                let newVersionArr = e.target.value.split(',');
+                setCurrentVersion(newVersionArr)
+                setData(versionData.version[newVersionArr[0]].iteration[newVersionArr[1]])
+              }}>
+                  {[...allVersionsIterations].reverse().map((versionIteration) => (
+                    <option selected={[latestVersionId, latestIterationId] == versionIteration} value={versionIteration}>             
+                      {versionIteration[0]}.{versionIteration[1]}
+                    </option>
+                  ))}
+              </select>
                 <button className='btn-a-small side-margin-5'>Save New Version</button>
                 <button className='btn-a-small side-margin-5'>Save New Iteration</button>
                 <button className='btn-a-small side-margin-5'>Delete...</button>
