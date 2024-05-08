@@ -2,10 +2,6 @@
   --topbar-height: 120px;
 }
 
-body {
-  overscroll-behavior: none; 
-}
-
 p {
   font-size: 14px;
 }
@@ -79,7 +75,7 @@ select {
 
 .search-bar button {
   font-size: large;
-  background-color: #4CAF51;
+  background-color: #4caf51;
   border: none;
   padding: 5px 8px 7px 8px;
 }
@@ -103,8 +99,12 @@ select {
 }
 
 @keyframes flash {
-  from { background-color: rgba(205, 224, 249, 0.9); }
-  to { background-color: #ffffff; }
+  from {
+    background-color: rgba(205, 224, 249, 0.9);
+  }
+  to {
+    background-color: #ffffff;
+  }
 }
 
 .flash-animation {
@@ -116,7 +116,7 @@ select {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: var(--topbar-height); 
+  height: var(--topbar-height);
   position: fixed;
   top: 0;
   z-index: 2;
@@ -130,7 +130,7 @@ select {
   background-color: #cde0f9;
 }
 
-.top-bar-categories{
+.top-bar-categories {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -236,14 +236,14 @@ h3 {
 
 .read-only-style {
   color: #6c757d;
-  background-color: #e9ecef; 
-  border: 1px solid #ced4da; 
-  cursor: not-allowed; 
-  pointer-events: none; 
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .submit-button {
-  background-color: #4CAF51;
+  background-color: #4caf51;
   color: black;
   padding: 10px;
   margin-bottom: 20px;
@@ -277,13 +277,13 @@ h3 {
   padding: 20px;
 }
 
-.form-instructions{
+.form-instructions {
   border-bottom: 1px solid rgb(201, 201, 201);
   padding: 20px;
 }
 
 .required::before {
-  content: "*";
+  content: '*';
   color: red;
   margin-right: 6px;
   font-size: 20px;
@@ -423,11 +423,11 @@ h3 {
   width: 120px;
 }
 
-[class^="btn-a"]:hover {
+[class^='btn-a']:hover {
   background-color: rgb(226, 238, 254);
 }
 
-[class^="btn-c"]:hover {
+[class^='btn-c']:hover {
   background-color: rgb(228, 228, 228);
 }
 
