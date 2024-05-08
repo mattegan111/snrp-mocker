@@ -1,19 +1,19 @@
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import Excel from 'exceljs';
 import cloneDeep from 'lodash/cloneDeep';
 import './App.css';
 import { data as dataImport } from './data';
 import { uniqueAttributes, allTypeAttributes, defaultAttributes, booleanTypeAttributes, allDefaultObjects } from './typeAttributes';
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { prepareFieldsForExcel, compareVersionObjects } from './xlsxProcessing'
 import { convertSnakeToTitle, convertTitleToSnake} from './utils'
 
 const AppContext = createContext();
 
 function App() {
-  const [versionData, setVersionData] = useState(dataImport);
-
   let latestVersionId = 1;
   let latestIterationId = 1;
-  let allVersions = [];
+  let allVersionsInit = [];
 
   Object.keys(dataImport.version).map(version => {
     if(latestVersionId <= version){
@@ -27,33 +27,60 @@ function App() {
   });
   for (let v = 1; v <= latestVersionId; v++) {
     for (let i = 1; i <= Object.keys(dataImport.version[v].iteration).length; i++) {
-      allVersions.push([v, i]);
+      allVersionsInit.push([`${v}`, `${i}`]);
     }
   }
 
+  const [versionData, setVersionData] = useState(dataImport);
   const [currentVersion, setCurrentVersion] = useState([latestVersionId, latestIterationId]);
   const [isCurrentVersion, setIsCurrentVersion] = useState(true)
-  const [allVersionsIterations, setAllVersionsIterations] = useState(allVersions);
+  const [allVersionsIterations, setAllVersionsIterations] = useState(allVersionsInit);
 
   const [data, setData] = useState(versionData.version[currentVersion[0]].iteration[currentVersion[1]]);
+
   const [openEditingSidebar, setOpenEditingSidebar] = useState(false);
   const toggleEditingSidebar = () => {
     setOpenEditingSidebar(!openEditingSidebar)
   };
   const [editingField, setEditingField] = useState();
   const [editingPane, setEditingPane] = useState('');
+  
   const [hideEditingTools, setHideEditingTools] = useState(false)
   const [typeAttributes, setTypeAttributes] = useState([]);
   const [flash, setFlash] = useState(false);
 
-
   useEffect(() => {
-    if(JSON.stringify(currentVersion) !== JSON.stringify([latestVersionId, latestIterationId])){
-      setHideEditingTools(true);
-      setIsCurrentVersion(false);
-    } else {
+    if(JSON.stringify(currentVersion) == JSON.stringify([...allVersionsIterations].reverse()[0])){
       setHideEditingTools(false);
       setIsCurrentVersion(true);
+    } else {
+      setHideEditingTools(true);
+      setIsCurrentVersion(false);
+    }
+  }, [currentVersion]);
+
+  useEffect(() => {
+    setVersionData({
+      version: {
+        ...versionData.version,
+        [currentVersion[0]]: {
+          iteration: {
+            ...versionData.version[currentVersion[0]].iteration,
+            [currentVersion[1]]: {
+              ...data
+            }
+          }
+        }
+      }
+    });
+  }, [data]);
+
+  const isMounted = useRef(false);
+  useEffect(() => {
+    if (isMounted.current) {
+      setData(versionData.version[currentVersion[0]].iteration[currentVersion[1]])
+    } else {
+      isMounted.current = true;
     }
   }, [currentVersion]);
 
@@ -105,21 +132,110 @@ function App() {
 }
 
 function TopBar() {
-  const {versionData, currentVersion, setCurrentVersion, isCurrentVersion, allVersionsIterations, setData, hideEditingTools, setHideEditingTools} = useContext(AppContext);
+  const {versionData, setVersionData, setCurrentVersion, isCurrentVersion, allVersionsIterations, setAllVersionsIterations, data, setData, hideEditingTools, setHideEditingTools} = useContext(AppContext);
 
   let latestVersionId = 1;
-  Object.keys(versionData.version).map(version => {
-    if(latestVersionId <= version){
-      latestVersionId = version
-    }
-  });
-
   let latestIterationId = 1;
-  Object.keys(versionData.version[latestVersionId].iteration).map(iteration => {
-    if(latestIterationId <= iteration){
-      latestIterationId = iteration
+  let allVersions = [];
+  function getLatestVersionIdAndIterationId(jsonData) {
+    Object.keys(jsonData.version).map(version => {
+      if(latestVersionId <= version){
+        latestVersionId = version
+      }
+    });
+    Object.keys(jsonData.version[latestVersionId].iteration).map(iteration => {
+      if(latestIterationId <= iteration){
+        latestIterationId = iteration
+      }
+    });
+    for (let v = 1; v <= latestVersionId; v++) {
+      for (let i = 1; i <= Object.keys(jsonData.version[v].iteration).length; i++) {
+        allVersions.push([`${v}`, `${i}`]);
+      }
     }
-  });
+  }
+
+  function importProject(e) {
+    const file = e.target.files[0];
+    if (file && file.type === "application/json") {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const jsonData = JSON.parse(e.target.result);
+          getLatestVersionIdAndIterationId(jsonData);
+          setVersionData(jsonData);
+          setAllVersionsIterations(allVersions);
+          setCurrentVersion([latestVersionId, latestIterationId]);
+          setData(jsonData.version[latestVersionId].iteration[latestIterationId]);
+          console.log("File successfully imported", versionData);
+        } catch (error) {
+          console.error("Error parsing JSON", error);
+        }
+      };
+      reader.readAsText(file);
+    } else {
+        console.error("Please upload a valid JSON file.");
+    }
+  }
+
+  function exportProject(versionData) {
+    const jsonStr = JSON.stringify(versionData, null, 4);
+
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'project-file.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  async function exportToExcel() {
+    const selectedOldVersion = document.getElementById('selectVersion1').value.split(',');
+    const selectedNewVersion = document.getElementById('selectVersion2').value.split(',');
+
+    console.log(versionData)
+
+    const oldVersion = versionData.version[selectedOldVersion[0]].iteration[selectedOldVersion[1]];
+    const newVersion = versionData.version[selectedNewVersion[0]].iteration[selectedNewVersion[1]];
+    
+    const changes = compareVersionObjects(oldVersion, newVersion);
+    const preparedData = prepareFieldsForExcel(newVersion.fields);
+
+    // Create a new workbook and a worksheet
+    let workbook = new Excel.Workbook();
+    let worksheet = workbook.addWorksheet('Fields');
+
+    // Populate the worksheet with prepared data
+    preparedData.forEach((row, rowIndex) => {
+      const excelRow = worksheet.addRow(row);
+      if (rowIndex !== 0 && changes.has(row[0])) { // Apply styles if changes exist for this row
+        excelRow.eachCell((cell) => {
+          cell.font = { color: { argb: 'FFFF0000' } }; // Set font color to red
+        });
+      }
+    });
+
+    // Write to a buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    // Create a Blob from the buffer and trigger download
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'data.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function triggerFileInput() {
+    document.getElementById('prj-file-input').click();
+  }
 
   return (
     <div className="top-bar">
@@ -128,8 +244,9 @@ function TopBar() {
           <div className="top-bar-category">
             <h3>Project</h3>
             <div className='top-bar-buttons'>
-              <button className='btn-a-small side-margin-5'>Open</button>
-              <button className='btn-a-small side-margin-5'>Save</button>
+              <input id='prj-file-input' className='file-input' type='file' accept='.json, .JSON' onChange={importProject} />
+              <button className='btn-a-small side-margin-5' onClick={() => triggerFileInput()}>Open</button>
+              <button className='btn-a-small side-margin-5' onClick={() => exportProject(versionData)}>Save</button>
             </div>
           </div>
           <div className='vertical-split'/>
@@ -147,7 +264,7 @@ function TopBar() {
             <h3>Visibility</h3>
             <div className='top-bar-buttons'>
               {isCurrentVersion && 
-                <button className='btn-a-small side-margin-5'onClick={() => setHideEditingTools(!hideEditingTools)}>
+                <button className='btn-a-small side-margin-5' onClick={() => setHideEditingTools(!hideEditingTools)}>
                   {hideEditingTools ? 'Show Editing Tools' : 'Hide Editing Tools'}
                 </button>
               }
@@ -173,8 +290,8 @@ function TopBar() {
               <div className='top-bar-buttons'>
               <select className='side-margin-5' onChange={(e) => {
                 let newVersionArr = e.target.value.split(',');
-                setCurrentVersion(newVersionArr)
-                setData(versionData.version[newVersionArr[0]].iteration[newVersionArr[1]])
+                setCurrentVersion(newVersionArr);
+                setData(versionData.version[newVersionArr[0]].iteration[newVersionArr[1]]);
               }}>
                   {[...allVersionsIterations].reverse().map((versionIteration) => (
                     <option selected={[latestVersionId, latestIterationId] == versionIteration} value={versionIteration}>             
@@ -182,24 +299,30 @@ function TopBar() {
                     </option>
                   ))}
               </select>
-                <button className='btn-a-small side-margin-5'>Save New Version</button>
-                <button className='btn-a-small side-margin-5'>Save New Iteration</button>
+                <button className='btn-a-small side-margin-5'>New Version</button>
+                <button className='btn-a-small side-margin-5'>New Iteration</button>
                 <button className='btn-a-small side-margin-5'>Delete...</button>
               </div>
           </div>
           <div className='vertical-split'/>
           <div className="top-bar-category">
-            <h3>Export Diff</h3>
+            <h3>Export .xlsx Diff</h3>
             <div className='top-bar-buttons'>              
-              <select className='side-margin-5'>
-                <option>Version 1</option>
-                <option>Version 2</option>
+              <select id='selectVersion1' className='side-margin-5'>
+                {[...allVersionsIterations].reverse().map((versionIteration) => (
+                  <option selected={[latestVersionId, latestIterationId] == versionIteration} value={versionIteration}>             
+                    {versionIteration[0]}.{versionIteration[1]}
+                  </option>
+                ))}
               </select>
-              <select className='side-margin-5'>
-                <option>Version 1</option>
-                <option>Version 2</option>
+              <select id='selectVersion2' className='side-margin-5'>
+                {[...allVersionsIterations].reverse().map((versionIteration) => (
+                  <option selected={[latestVersionId, latestIterationId] == versionIteration} value={versionIteration}>             
+                    {versionIteration[0]}.{versionIteration[1]}
+                  </option>
+                ))}
               </select>
-              <button className='btn-a-small side-margin-5'>Export</button>
+              <button onClick={exportToExcel} className='btn-a-small side-margin-5'>Export</button>
             </div>
           </div> 
         </div>
@@ -382,6 +505,7 @@ function EditingSidebarForFields() {
     }
     const newEditingField = setNestedObjectValues(editingField, key, e.target.value);
     setEditingField(newEditingField);
+
     setData({
       ...data,
       fields: {
@@ -397,7 +521,7 @@ function EditingSidebarForFields() {
     const newEditingField = { ...editingField };
     newEditingField.mandatory = e.target.checked;
     setEditingField(newEditingField);
-
+    
     setData({
       ...data,
       fields: {
@@ -475,6 +599,7 @@ function EditingSidebarForFields() {
       newTypedField.id = editingField.id
 
       setEditingField(newTypedField);
+
       setData({
         ...data,
         fields: {
