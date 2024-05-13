@@ -6,11 +6,39 @@ import { GroupList } from './Groups/GroupList';
 export function MainContent() {
   const {
     data,
-    setData,
     editingPane,
     setEditingPane,
     openEditingSidebar,
     setOpenEditingSidebar,
+  } = useContext(AppContext);
+
+  function handleOnClick() {
+    if ((editingPane !== 'form' && openEditingSidebar) || !openEditingSidebar) {
+      setOpenEditingSidebar(true);
+    } else {
+      setOpenEditingSidebar(false);
+    }
+    setEditingPane('form');
+  }
+
+  return (
+    <div className="main-content">
+      <div className="main-content-header" onClick={handleOnClick}>
+        <h1>{data.form.title}</h1>
+        <p>{data.form.description}</p>
+      </div>
+      <div className="form-instructions" onClick={handleOnClick}>
+        <p>{data.form.instructions}</p>
+      </div>
+      <FormFields view={'portal'}/>
+    </div>
+  );
+}
+
+export function FormFields({view}) {
+  const {
+    data,
+    setData,
   } = useContext(AppContext);
 
   function onDragEnd(result) {
@@ -91,33 +119,17 @@ export function MainContent() {
       }
     }
   }
-
-  function handleOnClick() {
-    if ((editingPane !== 'form' && openEditingSidebar) || !openEditingSidebar) {
-      setOpenEditingSidebar(true);
-    } else {
-      setOpenEditingSidebar(false);
-    }
-    setEditingPane('form');
-  }
-
-  return (
-    <div className="main-content">
-      <div className="main-content-header" onClick={handleOnClick}>
-        <h1>{data.form.title}</h1>
-        <p>{data.form.description}</p>
-      </div>
-      <div className="form-instructions" onClick={handleOnClick}>
-        <p>{data.form.instructions}</p>
-      </div>
-      <div className="form-fields">
-        <p className="required">Indicates required</p>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="all-groups" type="group">
-            {(provided) => <GroupList provided={provided} data={data} />}
-          </Droppable>
-        </DragDropContext>
-      </div>
+  
+  return(
+    <div className="form-fields">
+      {view === 'portal' ? 
+        <p className="required">Indicates required</p> 
+      : null}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="all-groups" type="group">
+          {(provided) => <GroupList provided={provided} data={data} />}
+        </Droppable>
+      </DragDropContext>
     </div>
-  );
+  )
 }

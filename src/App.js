@@ -15,7 +15,7 @@ import {
   compareVersionObjects,
 } from './Utils/xlsxProcessing';
 import { convertSnakeToTitle } from './Utils/utils';
-import { MainContent } from './Components/MainContent/MainContent';
+import { FormFields, MainContent } from './Components/MainContent/MainContent';
 
 export const AppContext = createContext();
 
@@ -66,6 +66,7 @@ function App() {
   const [editingField, setEditingField] = useState();
   const [editingPane, setEditingPane] = useState('');
 
+  const [viewSelected, setViewSelected] = useState('portal');
   const [hideEditingTools, setHideEditingTools] = useState(false);
   const [typeAttributes, setTypeAttributes] = useState([]);
   const [flash, setFlash] = useState(false);
@@ -141,21 +142,94 @@ function App() {
         setFlash,
         hideEditingTools,
         setHideEditingTools,
+        setViewSelected
       }}
     >
-      <div className="App">
-        <div className="main-container">
-          <TopBar />
-          <Header />
-          <div className="headerless-container">
-            <MainContent />
-            <SubmitPanel />
-            <EditingSidebar />
+        <div className="App">
+          <div className="main-container">
+            <TopBar />
+            {viewSelected == 'portal' ? 
+              <>
+                <Header />
+                <div className="headerless-container">
+                  <MainContent />
+                  <SubmitPanel />
+                  <EditingSidebar />
+                </div>
+              </>
+            : viewSelected == 'case' ? 
+              <>
+                <CaseHeader />
+                <div className='display-flex'>
+                  <div className='purple-side-bar'></div>
+                  <div className='case-view-main-container'>
+                    <div className='display-flex grey-top-bar'>
+                      <p className='side-padding-20'>Home</p>
+                      <p className='side-padding-20'>CSXXXXXXX</p>
+                    </div>
+                    <div className='details-top-bar'>
+                      <p>Details</p>
+                    </div>
+                    <div className='display-flex-column'>
+                      <h1 className='side-padding-20'>Case Short Description</h1>
+                      <div className='display-flex'>
+                        <div className='display-flex-column'>
+                          <p className='side-padding-20 margin-0'>Priority</p>
+                          <p className='side-padding-20 margin-0'>4 - Low</p>
+                        </div>
+                        <div className='display-flex-column'>
+                          <p className='side-padding-20 margin-0'>State</p>
+                          <p className='side-padding-20 margin-0'>New</p>
+                        </div>
+                      </div>
+                      <div className='case-tabs'>
+                        <p>Details</p>
+                        <p>SLAs</p>
+                        <p>Tasks</p>
+                        <p>Emails</p>
+                        <p>Escalations</p>
+                        <p>Similar Cases</p>
+                        <p>Approvers</p>
+                      </div>
+                      <div>
+                        <h2 className='case-title side-padding-20'>Variables</h2>
+                        <FormFields view={'case'}/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            : null}
           </div>
         </div>
-      </div>
+
     </AppContext.Provider>
   );
+}
+
+function CaseHeader() {
+  return(
+    <div className='flex-spread case-view-header side-padding-20'>
+      <div className='display-flex'>
+        <p className='margin-15'>🌐</p>
+        <p className='margin-15'>All</p>
+        <p className='margin-15'>Favourites</p>
+        <p className='margin-15'>History</p>
+        <p className='margin-15'>Workspaces</p>
+      </div>
+      <div>
+        <button>Workspace ☆</button>
+      </div>
+      <div className='display-flex'>
+        <div className="search-bar-sml">
+          <input type="text" placeholder="⌕ Search" />
+        </div>
+        <p className='margin-15'>⍰</p>
+        <p className='margin-15'>🔔</p>
+        <p className='margin-15'>👤</p>
+      </div>
+    </div>
+  )
 }
 
 function TopBar() {
@@ -169,6 +243,7 @@ function TopBar() {
     setData,
     hideEditingTools,
     setHideEditingTools,
+    setViewSelected
   } = useContext(AppContext);
 
   let latestVersionId = 1;
@@ -328,8 +403,8 @@ function TopBar() {
               <button className="btn-a-small side-margin-5">
                 Key Requirements
               </button>
-              <button className="btn-a-small side-margin-5">Portal</button>
-              <button className="btn-a-small side-margin-5">Case</button>
+              <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('portal')}>Portal</button>
+              <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('case')}>Case</button>
               <button className="btn-a-small side-margin-5">
                 Deleted Data
               </button>
