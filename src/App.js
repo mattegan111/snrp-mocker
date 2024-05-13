@@ -196,6 +196,7 @@ function App() {
                         <FormFields view={'case'}/>
                       </div>
                     </div>
+                    <EditingSidebar />
                   </div>
                 </div>
               </>
