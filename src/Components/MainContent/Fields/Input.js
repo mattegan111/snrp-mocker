@@ -1,7 +1,19 @@
+import { useContext } from 'react';
+import { AppContext } from '../../../App';
+
 export function Input({ field }) {
+  const {inputValues, setInputValues} = useContext(AppContext);
+
+  function handleOnChange(e) {
+    setInputValues({
+      ...inputValues,
+      [field.id]: [e.target.value]
+    });
+  }
+
   switch (field.type) {
     case 'single_line_text':
-      return <input type="text" className="full-width field-input" />;
+      return <input type="text" name={field.id} className="full-width field-input" value={inputValues[field.id] || ''} onChange={handleOnChange}/>;
     case 'multiple_choice':
       return (
         <>

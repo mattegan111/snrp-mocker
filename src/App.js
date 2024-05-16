@@ -71,6 +71,8 @@ function App() {
   const [typeAttributes, setTypeAttributes] = useState([]);
   const [flash, setFlash] = useState(false);
 
+  const [inputValues, setInputValues] = useState({});
+
   useEffect(() => {
     if (
       JSON.stringify(currentVersion) ==
@@ -142,7 +144,9 @@ function App() {
         setFlash,
         hideEditingTools,
         setHideEditingTools,
-        setViewSelected
+        setViewSelected,
+        inputValues,
+        setInputValues
       }}
     >
         <div className="App">
@@ -191,9 +195,19 @@ function App() {
                         <p>Similar Cases</p>
                         <p>Approvers</p>
                       </div>
-                      <div>
-                        <h2 className='case-title side-padding-20'>Variables</h2>
-                        <FormFields view={'case'}/>
+                      <div className='details-body'>
+                        <div className='case-fields'>
+                          <h2 className='case-title side-padding-20'>Variables</h2>
+                          <FormFields view={'case'}/>
+                        </div>
+                        <div className='activity-sidebar'>
+                          <div className='compose'>
+                            <h2>Compose</h2>
+                          </div>
+                          <div className='activity'>
+                            <h2>Activity</h2>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <EditingSidebar />

@@ -380,8 +380,33 @@ h3 {
   padding-right: 20px;
 }
 
+.details-body {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+.case-fields {
+  flex-grow: 3;
+}
+
 .case-title {
   margin-bottom: 0px;
+}
+
+.activity-sidebar {
+  flex-grow: 2;
+  border-left: 1px solid #ccc;
+}
+
+.compose {
+  padding: 5px 20px 5px 20px;
+  height: 350px;
+  background-color: rgb(245, 245, 245);
+}
+
+.activity {
+  padding: 5px 20px 5px 20px;
+  background-color: white;
 }
 
 .full-width {
