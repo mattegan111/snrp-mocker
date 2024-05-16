@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/snrp-mocker/static/css/main.4ff7652d.css",
+    "main.js": "/snrp-mocker/static/js/main.1aa0a2d1.js",
+    "index.html": "/snrp-mocker/index.html",
+    "main.4ff7652d.css.map": "/snrp-mocker/static/css/main.4ff7652d.css.map",
+    "main.1aa0a2d1.js.map": "/snrp-mocker/static/js/main.1aa0a2d1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4ff7652d.css",
+    "static/js/main.1aa0a2d1.js"
+  ]
+}
