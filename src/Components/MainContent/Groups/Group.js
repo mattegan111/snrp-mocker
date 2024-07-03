@@ -151,8 +151,15 @@ export function Group({ group, fields }) {
                         className="btn-a"
                         onClick={handleTypeClick}
                         value="Single Line Text"
-                      >
+                      >                      
                         Single Line Text
+                      </button>
+                      <button
+                        className="btn-a"
+                        onClick={handleTypeClick}
+                        value="Multi Line Text"
+                      >
+                        Multi Line Text
                       </button>
                       <button
                         className="btn-a"
@@ -193,9 +200,6 @@ export function Group({ group, fields }) {
                           <option value="Label">Label</option>
                           <option value="Lookup Select Box">
                             Lookup Select Box
-                          </option>
-                          <option value="Multi Line Text">
-                            Multi Line Text
                           </option>
                           <option value="Reference">Reference</option>
                           <option value="Url">Url</option>

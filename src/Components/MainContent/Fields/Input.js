@@ -38,7 +38,7 @@ export function Input({ field }) {
     case 'date':
       return <input type="date" className="full-width field-input" />;
     case 'multi_line_text':
-      return <textarea />;
+      return <textarea className="full-width field-input" name={field.id} value={inputValues[field.id] || ''} onChange={handleOnChange}/>;
     case 'select_box':
       return (
         <select className="full-width field-input">
