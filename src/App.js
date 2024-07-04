@@ -993,10 +993,10 @@ function EditingSidebarForFields() {
             {typeAttributes.includes('question_choices') && (
               <div className="display-flex-column">
                 <label className="editing-label">Question choices</label>
-                <div name="options">
-                  <div className="option-container">
-                    {Object.keys(editingField.question_choices).map(
-                      (key, index) => (
+                <div className="options-container">
+                  {Object.keys(editingField.question_choices).map(
+                    (key, index) => (
+                      <div className="option-container">
                         <div key={`${editingField.id} qc ${index}`}>
                           <label className="display-block">
                             id: {editingField.question_choices[key].id}
@@ -1023,9 +1023,9 @@ function EditingSidebarForFields() {
                             Delete
                           </button>
                         </div>
-                      )
-                    )}
-                  </div>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             )}
