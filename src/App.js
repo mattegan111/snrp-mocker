@@ -871,10 +871,10 @@ function EditingSidebarForFields() {
     }
   }
 
-  function handleEditOptions(id, e) {
+  function handleEditOptions(key, id, e) {
     const newQuestionChoices = {
       ...editingField.question_choices,
-      [id]: {
+      [key]: {
         id: id,
         value: e.target.value,
       },
@@ -897,9 +897,9 @@ function EditingSidebarForFields() {
     });
   }
 
-  function handleOptionDelete(id, e) {
+  function handleOptionDelete(key, e) {
     const newQuestionChoices = { ...editingField.question_choices };
-    delete newQuestionChoices[id];
+    delete newQuestionChoices[key];
 
     setEditingField({
       ...editingField,
@@ -1039,6 +1039,7 @@ function EditingSidebarForFields() {
                             value={editingField.question_choices[key].value}
                             onChange={(e) =>
                               handleEditOptions(
+                                key,
                                 editingField.question_choices[key].id,
                                 e
                               )
@@ -1047,9 +1048,7 @@ function EditingSidebarForFields() {
                           <button
                             className="btn-a-small"
                             onClick={() =>
-                              handleOptionDelete(
-                                editingField.question_choices[key].id
-                              )
+                              handleOptionDelete(key)
                             }
                           >
                             Delete
