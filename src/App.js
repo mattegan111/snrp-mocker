@@ -918,6 +918,38 @@ function EditingSidebarForFields() {
     });
   }
 
+  function handleOptionAdd() {
+    // Create a unique placeholder option id
+    let newIdNum = 1;
+    while(Object.keys(editingField.question_choices).includes(`option-${newIdNum}`)){
+      newIdNum++;
+    }
+    let id = `option-${newIdNum}`;
+
+    // Handle adding the new option
+
+    const newQuestionChoices = { 
+      ...editingField.question_choices,  
+      [id]: { id: '', value: id } // The id of the new question option is set to value when a new version/iteration is saved
+    };
+
+    setEditingField({
+      ...editingField,
+      question_choices: newQuestionChoices,
+    });
+
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [editingField.id]: {
+          ...editingField,
+          question_choices: newQuestionChoices,
+        },
+      },
+    });
+  }
+
   return (
     <div
       className={
@@ -1027,6 +1059,14 @@ function EditingSidebarForFields() {
                     )
                   )}
                 </div>
+                <button
+                  className="btn-a-small"
+                  onClick={() =>
+                    handleOptionAdd()
+                  }
+                >
+                  Add
+                </button>
               </div>
             )}
             {typeAttributes.includes('annotation.comments_for_developers') && (
