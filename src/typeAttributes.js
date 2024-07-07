@@ -123,7 +123,7 @@ const titleObject = {
   title: '',
 };
 
-const allTypeAttributes = {
+const allTypeAttributes = { //TODO this should be defined programmatically based off of the keys of the default objects
   attachment: [...defaultAttributes],
   checkbox: [...defaultAttributes],
   date: [...defaultAttributes],
@@ -131,7 +131,7 @@ const allTypeAttributes = {
   label: [...defaultAttributes],
   lookup_select_box: [...defaultAttributes],
   multi_line_text: [...defaultAttributes],
-  multiple_choice: [...defaultAttributes, 'question_choices'],
+  multiple_choice: [...defaultAttributes, 'question_choices', 'choice_direction'],
   reference: [...defaultAttributes],
   rich_text_label: [
     ...richTextLabelAttributes, //richTextLabelAttributes
@@ -179,6 +179,7 @@ const allDefaultObjects = {
     ...defaultObject,
     type: 'multiple_choice',
     question_choices: {},
+    choice_direction: 'down'
   },
   reference: {
     ...defaultObject,

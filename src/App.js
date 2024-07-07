@@ -871,6 +871,26 @@ function EditingSidebarForFields() {
     }
   }
 
+  function onChoiceDirectionChange(e) {
+    const newChoiceDirection = e.target.value;
+
+    setEditingField({
+      ...editingField,
+      choice_direction: newChoiceDirection
+    });
+
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [editingField.id]: {
+          ...editingField,
+          choice_direction: newChoiceDirection
+        },
+      },
+    });
+  }
+
   function handleEditOptions(key, id, e) {
     const newQuestionChoices = {
       ...editingField.question_choices,
@@ -1066,6 +1086,23 @@ function EditingSidebarForFields() {
                 >
                   Add
                 </button>
+              </div>
+            )}
+            {typeAttributes.includes('choice_direction') && (
+              <div className="display-flex-column">
+                <label className="editing-label">Choice Direction</label>
+                <select
+                  className="editing-field-input"
+                  value={editingField.choice_direction}
+                  onChange={(e) => onChoiceDirectionChange(e)}
+                >
+                  <option key={`${editingField.id} down`} value={'down'}>
+                    Down
+                  </option>
+                  <option key={`${editingField.id} across`} value={'across'}>
+                    Across
+                  </option>
+                </select>
               </div>
             )}
             {typeAttributes.includes('annotation.comments_for_developers') && (

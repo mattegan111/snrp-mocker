@@ -97,6 +97,7 @@ export function Group({ group, fields }) {
     const newFieldId = `field-${highestIndex}`;
     const newField = cloneDeep(allDefaultObjects[typeSnakeCase]);
     newField.id = newFieldId;
+    newField.question.question_text = 'new field'
 
     setTypeAttributes(allTypeAttributes[typeSnakeCase]);
     setEditingField(newField);

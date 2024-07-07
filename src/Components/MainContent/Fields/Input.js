@@ -16,22 +16,19 @@ export function Input({ field }) {
       return <input type="text" name={field.id} className="full-width field-input" value={inputValues[field.id] || ''} onChange={handleOnChange}/>;
     case 'multiple_choice':
       return (
-        <>
-          {field.question_choices.map((choice) => {
-            return (
+        <div className="full-width field-input">
+          {Object.keys(field.question_choices).length > 0 ? (
+            Object.keys(field.question_choices).map((key, i) => (
               <>
-                <input
-                  type="radio"
-                  className="full-width field-input"
-                  id={field.id + choice}
-                  name={field.id + choice}
-                  value={choice}
-                />
-                <label for={field.id + choice}>{choice}</label>
+                <input key={`qc${i}`} value={field.question_choices[key].value} type="radio" />
+                <label>{field.question_choices[key].value}</label>
+                {field.choice_direction === 'down' ? (<br/>) : (<></>)}
               </>
-            );
-          })}
-        </>
+            ))
+          ) : (
+            <></>
+          )}
+        </div>
       );
     case 'checkbox':
       return <input type="checkbox" className="full-width field-input" />;
