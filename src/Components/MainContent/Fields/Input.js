@@ -20,7 +20,7 @@ export function Input({ field }) {
           {Object.keys(field.question_choices).length > 0 ? (
             Object.keys(field.question_choices).map((key, i) => (
               <>
-                <input key={`qc${i}`} value={field.question_choices[key].value} type="radio" />
+                <input key={`qc${i}`} type="radio" name={field.id} value={field.question_choices[key].value} />
                 <label>{field.question_choices[key].value}</label>
                 {field.choice_direction === 'down' ? (<br/>) : (<></>)}
               </>

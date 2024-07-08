@@ -23,7 +23,6 @@ export function Field({ field, index }) {
       : 'half-width'; // TODO fix prop undefined
 
   function handleOnClick(e) {
-    e.preventDefault();
 
     if (openEditingSidebar) {
       setFlash(true);
