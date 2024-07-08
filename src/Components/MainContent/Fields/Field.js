@@ -49,10 +49,9 @@ export function Field({ field, index }) {
     setHelpClicked(!helpClicked);
   }
 
-  // Handle for CheckBox as the template below doesn't suit the required layout for this type
   return (
     <>
-      {field.type == 'checkbox' ? (
+      {field.type == 'checkbox' ? ( // Handle for CheckBox as the template below doesn't suit the required layout for this type
         <Draggable draggableId={field.id} index={index}>
           {(provided) => (
             <div
@@ -68,6 +67,35 @@ export function Field({ field, index }) {
               >
                 {field.question.question_text}
               </p>
+            </div>
+          )}
+        </Draggable>
+      ) : field.type == 'rich_text_label' ? ( // Handle for Rich Text Label as the template below doesn't suit the required layout for this type
+        <Draggable draggableId={field.id} index={index}>
+          {(provided) => (
+            <div
+              className={`field-container display-flex ${fieldClass}`}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+              onClick={handleOnClick}
+            >
+              {field.question.rich_text.length > 0 ? (
+                <div>
+                  <p 
+                    className={
+                      `${
+                        field.style === 'Red' ? 'red-text' : 
+                        field.style === 'Red Bold' ? 'red-bold-text' : ''
+                      }`
+                    }
+                  >
+                    {field.question.rich_text}
+                  </p>
+                </div>
+              ) : (
+                <p>Rich text label</p>
+              )}
             </div>
           )}
         </Draggable>

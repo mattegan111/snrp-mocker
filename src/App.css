@@ -190,6 +190,15 @@ h3 {
   font-size: 10px;
 }
 
+.red-text {
+  color: red;
+}
+
+.red-bold-text {
+  color: red;
+  font-weight: bold;
+}
+
 .editing-sidebar {
   display: flex;
   flex-direction: column;

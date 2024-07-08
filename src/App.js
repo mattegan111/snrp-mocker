@@ -848,6 +848,26 @@ function EditingSidebarForFields() {
     });
   }
 
+  function onStyleChange(e) {
+    const newStyle = e.target.value;
+
+    setEditingField({
+      ...editingField,
+      style: newStyle
+    });
+
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [editingField.id]: {
+          ...editingField,
+          style: newStyle
+        },
+      },
+    });
+  }
+
   function onTypeChange(e, key) {
     const userResp = prompt(
       "This operation may destroy field data, such as options or help tags, and is not generally recommended. Type 'yes' below to continue anyway, or click cancel to abort."
@@ -997,6 +1017,30 @@ function EditingSidebarForFields() {
                 onChange={(e) => onChange(e, 'question.question_text')}
               />
             </div>
+            {typeAttributes.includes('question.rich_text') && (
+              <div className="display-flex-column">
+                <label className="editing-label">Rich text</label>
+                <input
+                  className="editing-field-input"
+                  value={editingField.question.rich_text}
+                  onChange={(e) => onChange(e, 'question.rich_text')}
+                />
+              </div>
+            )}    
+            {typeAttributes.includes('style') && (
+              <div className="display-flex-column">
+                <label className="editing-label">Style</label>
+                <select
+                  className="editing-field-input"
+                  value={editingField.style}
+                  onChange={(e) => onStyleChange(e)}
+                >
+                  <option key={`style-option-none  ${editingField.id}`} value=''>None</option>                    
+                  <option key={`style-option-red ${editingField.id}`} value='Red'>Red</option>                    
+                  <option key={`style-option-red-bold ${editingField.id}`} value='Red Bold'>Red Bold</option>
+                </select>
+              </div>
+            )}        
             {typeAttributes.includes('mandatory') && (
               <div className="display-flex">
                 <input

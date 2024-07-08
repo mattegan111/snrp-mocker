@@ -2,13 +2,10 @@ const titleAttributes = ['type', 'title'];
 
 const richTextLabelAttributes = [
   'type',
-  'rich_text',
-  'mandatory',
+  'question.rich_text',
+  'style',
   'active',
   'instructions',
-  'annotation.show_help',
-  'annotation.always_expanded',
-  'annotation.help_tag',
   'comments_for_developers',
   'impacts_reporting',
 ];
@@ -79,12 +76,14 @@ const richTextLabelObject = {
   type: '',
   mandatory: false,
   active: true,
-
+  
   question: {
     question_text: '',
     name: '',
     rich_text: '',
   },
+  
+  style: '',
 
   type_specifications: {
     variable_width: '100%',

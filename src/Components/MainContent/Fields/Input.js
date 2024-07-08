@@ -77,10 +77,6 @@ export function Input({ field }) {
           <label for={field.id + 'no'}>No</label>
         </>
       );
-    case 'rich_text_label':
-      return (
-        <p className="full-width field-input">{field.question.rich_text}</p>
-      );
     default:
       break;
   }
