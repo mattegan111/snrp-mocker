@@ -86,7 +86,9 @@ export function Field({ field, index }) {
                     className={
                       `pre-wrap ${
                         field.style === 'Red' ? 'red-text' : 
-                        field.style === 'Red Bold' ? 'red-bold-text' : ''
+                        field.style === 'Green' ? 'green-text' : 
+                        field.style === 'Red Bold' ? 'red-bold-text' :
+                        field.style === 'Green Bold' ? 'green-bold-text' : ''
                       }`
                     }
                   >

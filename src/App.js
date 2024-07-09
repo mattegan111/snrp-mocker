@@ -1038,6 +1038,8 @@ function EditingSidebarForFields() {
                   <option key={`style-option-none  ${editingField.id}`} value=''>None</option>                    
                   <option key={`style-option-red ${editingField.id}`} value='Red'>Red</option>                    
                   <option key={`style-option-red-bold ${editingField.id}`} value='Red Bold'>Red Bold</option>
+                  <option key={`style-option-green ${editingField.id}`} value='Green'>Green</option>                    
+                  <option key={`style-option-green-bold ${editingField.id}`} value='Green Bold'>Green Bold</option>                    
                 </select>
               </div>
             )}        

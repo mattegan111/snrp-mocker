@@ -194,14 +194,24 @@ h3 {
   color: red;
 }
 
-.pre-wrap {
-  white-space: pre-wrap;
-}
-
 .red-bold-text {
   color: red;
   font-weight: bold;
 }
+
+.green-text {
+  color: green;
+}
+
+.green-bold-text {
+  color: green;
+  font-weight: bold;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
+}
+
 
 .editing-sidebar {
   display: flex;
