@@ -142,7 +142,7 @@ const allTypeAttributes = { //TODO this should be defined programmatically based
   lookup_select_box: [...defaultAttributes],
   multi_line_text: [...defaultAttributes],
   multiple_choice: [...defaultAttributes, 'question_choices', 'choice_direction'],
-  reference: [...defaultAttributes],
+  reference: [...defaultAttributes, 'question_choices', 'reference_table'],
   rich_text_label: [
     ...richTextLabelAttributes, //richTextLabelAttributes
   ],
@@ -194,6 +194,8 @@ const allDefaultObjects = {
   reference: {
     ...defaultObject,
     type: 'reference',
+    question_choices: {},
+    reference_table: ''
   },
   rich_text_label: {
     ...richTextLabelObject, //richTextLabelAttributes

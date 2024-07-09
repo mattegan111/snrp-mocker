@@ -195,16 +195,16 @@ export function Group({ group, fields }) {
                           <option value="" disabled selected>
                             More field types...
                           </option>
-                          <option value="Attachment">Attachment</option>
+                          <option disabled value="Attachment">Attachment</option>
                           <option value="Date">Date</option>
-                          <option value="Email">Email</option>
-                          <option value="Label">Label</option>
-                          <option value="Lookup Select Box">
+                          <option disabled value="Email">Email</option>
+                          <option disabled value="Label">Label</option>
+                          <option disabled value="Lookup Select Box">
                             Lookup Select Box
                           </option>
                           <option value="Reference">Reference</option>
-                          <option value="Url">Url</option>
-                          <option value="Yes No">Yes No</option>
+                          <option disabled value="Url">Url</option>
+                          <option disabled value="Yes No">Yes No</option>
                         </select>
                       </div>
                     </>

@@ -37,6 +37,7 @@ export function Input({ field }) {
     case 'multi_line_text':
       return <textarea className="full-width field-input" name={field.id} value={inputValues[field.id] || ''} onChange={handleOnChange}/>;
     case 'select_box':
+    case 'reference':
       return (
         <select className="full-width field-input">
           {Object.keys(field.question_choices).length > 0 ? (
@@ -48,14 +49,6 @@ export function Input({ field }) {
           ) : (
             <></>
           )}
-        </select>
-      );
-    case 'reference':
-      return (
-        <select className="full-width field-input">
-          {['option 1', 'option 2', 'option 3'].map((choice) => {
-            return <option value={choice}>{choice}</option>;
-          })}
         </select>
       );
     case 'yes_no':
