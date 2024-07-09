@@ -24,6 +24,17 @@ const defaultAttributes = [
   'impacts_reporting',
 ];
 
+const checkboxAttributes = [
+  'type',
+  'question.question_text',
+  'question.name',
+  'mandatory',
+  'active',
+  'instructions',
+  'comments_for_developers',
+  'impacts_reporting',
+];
+
 const booleanTypeAttributes = [
   'map_to_field',
   'mandatory',
@@ -124,7 +135,7 @@ const titleObject = {
 
 const allTypeAttributes = { //TODO this should be defined programmatically based off of the keys of the default objects
   attachment: [...defaultAttributes],
-  checkbox: [...defaultAttributes],
+  checkbox: [...checkboxAttributes],
   date: [...defaultAttributes],
   email: [...defaultAttributes],
   label: [...defaultAttributes],
