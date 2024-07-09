@@ -194,6 +194,10 @@ h3 {
   color: red;
 }
 
+.pre-wrap {
+  white-space: pre-wrap;
+}
+
 .red-bold-text {
   color: red;
   font-weight: bold;

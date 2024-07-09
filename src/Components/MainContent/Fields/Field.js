@@ -82,16 +82,16 @@ export function Field({ field, index }) {
             >
               {field.question.rich_text.length > 0 ? (
                 <div>
-                  <p 
+                  <div 
                     className={
-                      `${
+                      `pre-wrap ${
                         field.style === 'Red' ? 'red-text' : 
                         field.style === 'Red Bold' ? 'red-bold-text' : ''
                       }`
                     }
                   >
                     {field.question.rich_text}
-                  </p>
+                  </div>
                 </div>
               ) : (
                 <p>Rich text label</p>

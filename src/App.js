@@ -1020,7 +1020,7 @@ function EditingSidebarForFields() {
             {typeAttributes.includes('question.rich_text') && (
               <div className="display-flex-column">
                 <label className="editing-label">Rich text</label>
-                <input
+                <textarea
                   className="editing-field-input"
                   value={editingField.question.rich_text}
                   onChange={(e) => onChange(e, 'question.rich_text')}
