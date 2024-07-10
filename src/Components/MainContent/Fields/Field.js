@@ -60,7 +60,7 @@ export function Field({ field, index }) {
               {...provided.dragHandleProps}
               ref={provided.innerRef}
             >
-              <input type="checkbox" />
+              <Input field={field} />
               <p
                 className={`p-label ${field.mandatory ? 'required' : ''}`}
                 onClick={handleOnClick}
