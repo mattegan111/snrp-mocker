@@ -263,6 +263,7 @@ function CaseHeader() {
 
 function TopBar() {
   const {
+    data,
     setData,
     versionData,
     history,
@@ -401,6 +402,15 @@ function TopBar() {
 
   function undo() {
     setEditingField(history[history.length - 2]);
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [history[history.length - 2].id]: {
+          ...history[history.length - 2],
+        },
+      },
+    });
   }
 
   return (
