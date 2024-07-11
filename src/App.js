@@ -105,13 +105,16 @@ function App() {
   }, [data]);
 
   useEffect(() => {
+    console.log('runs')
     const editingFieldClone = cloneDeep(editingField);
     if(history.length === 0){
       setHistory([editingFieldClone]);
     } else if(history.length > 0){
       setHistory([...history, editingFieldClone]);
     }
-  }, [editingField])
+console.log(history.length)
+
+  }, [editingField]);
   
 
   const isMounted = useRef(false);
@@ -400,14 +403,19 @@ function TopBar() {
     document.getElementById('prj-file-input').click();
   }
 
+  const [pointOffset, setPointOffset] = useState(0);
+
   function undo() {
-    setEditingField(history[history.length - 2]);
+    console.log('pointOffset')
+    console.log(pointOffset)
+    setPointOffset(pointOffset - 2);
+    setEditingField(history[history.length - 2 + pointOffset]);
     setData({
       ...data,
       fields: {
         ...data.fields,
-        [history[history.length - 2].id]: {
-          ...history[history.length - 2],
+        [history[history.length - 2 + pointOffset].id]: {
+          ...history[history.length - 2 + pointOffset],
         },
       },
     });
