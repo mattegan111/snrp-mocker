@@ -59,6 +59,8 @@ function App() {
     versionData.version[currentVersion[0]].iteration[currentVersion[1]]
   );
 
+  const [history, setHistory] = useState([]);
+
   const [openEditingSidebar, setOpenEditingSidebar] = useState(false);
   const toggleEditingSidebar = () => {
     setOpenEditingSidebar(!openEditingSidebar);
@@ -102,6 +104,16 @@ function App() {
     });
   }, [data]);
 
+  useEffect(() => {
+    const editingFieldClone = cloneDeep(editingField);
+    if(history.length === 0){
+      setHistory([editingFieldClone]);
+    } else if(history.length > 0){
+      setHistory([...history, editingFieldClone]);
+    }
+  }, [editingField])
+  
+
   const isMounted = useRef(false);
   useEffect(() => {
     if (isMounted.current) {
@@ -120,6 +132,8 @@ function App() {
         setData,
         versionData,
         setVersionData,
+        history,
+        setHistory,
         currentVersion,
         setCurrentVersion,
         isCurrentVersion,
@@ -249,13 +263,15 @@ function CaseHeader() {
 
 function TopBar() {
   const {
+    setData,
     versionData,
+    history,
+    setEditingField,
     setVersionData,
     setCurrentVersion,
     isCurrentVersion,
     allVersionsIterations,
     setAllVersionsIterations,
-    setData,
     hideEditingTools,
     setHideEditingTools,
     setViewSelected
@@ -383,6 +399,10 @@ function TopBar() {
     document.getElementById('prj-file-input').click();
   }
 
+  function undo() {
+    setEditingField(history[history.length - 2]);
+  }
+
   return (
     <div className="top-bar">
       <div className="inner-top-bar">
@@ -456,6 +476,18 @@ function TopBar() {
               </select>
               <button className="btn-a-small side-margin-10">
                 Save Layout
+              </button>
+            </div>
+          </div>
+          <div className="vertical-split" />
+          <div className="top-bar-category">
+            <h3>History</h3>
+            <div className="top-bar-buttons">
+              <button 
+                className="btn-a-small side-margin-10"
+                onClick={undo}
+              >
+                Undo
               </button>
             </div>
           </div>
