@@ -421,6 +421,21 @@ function TopBar() {
     });
   }
 
+  function redo() {
+    console.log('pointOffset')
+    console.log(pointOffset)
+    setEditingField(history[history.length + pointOffset]);
+    setData({
+      ...data,
+      fields: {
+        ...data.fields,
+        [history[history.length + pointOffset].id]: {
+          ...history[history.length + pointOffset],
+        },
+      },
+    });
+  }
+
   return (
     <div className="top-bar">
       <div className="inner-top-bar">
@@ -506,6 +521,12 @@ function TopBar() {
                 onClick={undo}
               >
                 Undo
+              </button>
+              <button 
+                className="btn-a-small side-margin-10"
+                onClick={redo}
+              >
+                Redo
               </button>
             </div>
           </div>
