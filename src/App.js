@@ -405,34 +405,35 @@ function TopBar() {
   const [pointOffset, setPointOffset] = useState(0);
 
   function undo() {
-    console.log('pointOffset')
-    console.log(pointOffset)
-    setPointOffset(pointOffset - 2);
-    setEditingField(history[history.length - 2 + pointOffset]);
-    setData({
-      ...data,
-      fields: {
-        ...data.fields,
-        [history[history.length - 2 + pointOffset].id]: {
-          ...history[history.length - 2 + pointOffset],
+    const newPointInHistory = history.length - 2 + pointOffset;
+    if(newPointInHistory > 0){
+      setPointOffset(pointOffset - 2);
+      setEditingField(history[history.length - 2 + pointOffset]);
+      setData({
+        ...data,
+        fields: {
+          ...data.fields,
+          [history[history.length - 2 + pointOffset].id]: {
+            ...history[history.length - 2 + pointOffset],
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   function redo() {
-    console.log('pointOffset')
-    console.log(pointOffset)
-    setEditingField(history[history.length + pointOffset]);
-    setData({
-      ...data,
-      fields: {
-        ...data.fields,
-        [history[history.length + pointOffset].id]: {
-          ...history[history.length + pointOffset],
+    if(history.length > history.length + pointOffset){
+      setEditingField(history[history.length + pointOffset]);
+      setData({
+        ...data,
+        fields: {
+          ...data.fields,
+          [history[history.length + pointOffset].id]: {
+            ...history[history.length + pointOffset],
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   return (
