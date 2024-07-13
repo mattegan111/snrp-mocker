@@ -166,75 +166,74 @@ console.log(history.length)
         setInputValues
       }}
     >
-        <div className="App">
-          <div className="main-container">
-            <TopBar />
-            {viewSelected == 'portal' ? 
-              <>
-                <Header />
-                <div className="headerless-container">
-                  <MainContent />
-                  <SubmitPanel />
+      <div className="App">
+        <div className="main-container">
+          <TopBar />
+          {viewSelected == 'portal' ? 
+            <>
+              <Header />
+              <div className="headerless-container">
+                <MainContent />
+                <SubmitPanel />
+                <EditingSidebar />
+              </div>
+            </>
+          : viewSelected == 'case' ? 
+            <>
+              <CaseHeader />
+              <div className='display-flex'>
+                <div className='purple-side-bar'></div>
+                <div className='case-view-main-container'>
+                  <div className='display-flex grey-top-bar'>
+                    <p className='side-padding-20'>Home</p>
+                    <p className='side-padding-20'>CSXXXXXXX</p>
+                  </div>
+                  <div className='details-top-bar'>
+                    <p>Details</p>
+                  </div>
+                  <div className='display-flex-column'>
+                    <h1 className='side-padding-20'>Case Short Description</h1>
+                    <div className='display-flex'>
+                      <div className='display-flex-column'>
+                        <p className='side-padding-20 margin-0'>Priority</p>
+                        <p className='side-padding-20 margin-0'>4 - Low</p>
+                      </div>
+                      <div className='display-flex-column'>
+                        <p className='side-padding-20 margin-0'>State</p>
+                        <p className='side-padding-20 margin-0'>New</p>
+                      </div>
+                    </div>
+                    <div className='case-tabs'>
+                      <p>Details</p>
+                      <p>SLAs</p>
+                      <p>Tasks</p>
+                      <p>Emails</p>
+                      <p>Escalations</p>
+                      <p>Similar Cases</p>
+                      <p>Approvers</p>
+                    </div>
+                    <div className='details-body'>
+                      <div className='case-fields'>
+                        <h2 className='case-title side-padding-20'>Variables</h2>
+                        <FormFields view={'case'}/>
+                      </div>
+                      <div className='activity-sidebar'>
+                        <div className='compose'>
+                          <h2>Compose</h2>
+                        </div>
+                        <div className='activity'>
+                          <h2>Activity</h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <EditingSidebar />
                 </div>
-              </>
-            : viewSelected == 'case' ? 
-              <>
-                <CaseHeader />
-                <div className='display-flex'>
-                  <div className='purple-side-bar'></div>
-                  <div className='case-view-main-container'>
-                    <div className='display-flex grey-top-bar'>
-                      <p className='side-padding-20'>Home</p>
-                      <p className='side-padding-20'>CSXXXXXXX</p>
-                    </div>
-                    <div className='details-top-bar'>
-                      <p>Details</p>
-                    </div>
-                    <div className='display-flex-column'>
-                      <h1 className='side-padding-20'>Case Short Description</h1>
-                      <div className='display-flex'>
-                        <div className='display-flex-column'>
-                          <p className='side-padding-20 margin-0'>Priority</p>
-                          <p className='side-padding-20 margin-0'>4 - Low</p>
-                        </div>
-                        <div className='display-flex-column'>
-                          <p className='side-padding-20 margin-0'>State</p>
-                          <p className='side-padding-20 margin-0'>New</p>
-                        </div>
-                      </div>
-                      <div className='case-tabs'>
-                        <p>Details</p>
-                        <p>SLAs</p>
-                        <p>Tasks</p>
-                        <p>Emails</p>
-                        <p>Escalations</p>
-                        <p>Similar Cases</p>
-                        <p>Approvers</p>
-                      </div>
-                      <div className='details-body'>
-                        <div className='case-fields'>
-                          <h2 className='case-title side-padding-20'>Variables</h2>
-                          <FormFields view={'case'}/>
-                        </div>
-                        <div className='activity-sidebar'>
-                          <div className='compose'>
-                            <h2>Compose</h2>
-                          </div>
-                          <div className='activity'>
-                            <h2>Activity</h2>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <EditingSidebar />
-                  </div>
-                </div>
-              </>
-            : null}
-          </div>
+              </div>
+            </>
+          : null}
         </div>
-
+      </div>
     </AppContext.Provider>
   );
 }
