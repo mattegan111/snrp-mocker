@@ -231,6 +231,17 @@ console.log(history.length)
                 </div>
               </div>
             </>
+          : viewSelected == 'deleted data' ?
+            <>
+              <div className="headerless-container-blue">
+                <div className="main-content">
+                  <div className="form-instructions">
+                    <h1>Deleted Data</h1>
+                    <p>Deleted fields can be restored from here.</p>
+                  </div>
+                </div>
+              </div>
+            </>
           : null}
         </div>
       </div>
@@ -473,7 +484,7 @@ function TopBar() {
               </button>
               <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('portal')}>Portal</button>
               <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('case')}>Case</button>
-              <button className="btn-a-small side-margin-5">
+              <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('deleted data')}>
                 Deleted Data
               </button>
             </div>
@@ -809,6 +820,7 @@ function EditingSidebarForFields() {
     editingField,
     setEditingField,
     openEditingSidebar,
+    setOpenEditingSidebar,
     hideEditingTools,
     toggleEditingSidebar,
     allDefaultObjects,
@@ -1061,6 +1073,18 @@ function EditingSidebarForFields() {
     });
   }
 
+  function handleFieldDelete() {
+    const fieldsGroup = Object.values(data.groups).find(group => group.fieldIds.includes(editingField.id));
+    const fieldIndex = fieldsGroup.fieldIds.indexOf(editingField.id);
+
+    setOpenEditingSidebar(false);
+
+    const newData = { ...data };
+    delete newData.groups[fieldsGroup.id].fieldIds[fieldIndex];
+    delete newData.fields[editingField.id];
+    setData(newData);
+  }
+
   return (
     <div
       className={
@@ -1280,8 +1304,11 @@ function EditingSidebarForFields() {
                 <label className="editing-label">Active</label>
               </div>
             )}
-            <button className="btn-a" onClick={toggleEditingSidebar}>
+            <button className="btn-a margin-15" onClick={toggleEditingSidebar}>
               Close
+            </button>
+            <button className="btn-a light-red-background margin-15" onClick={handleFieldDelete}>
+              Delete
             </button>
           </div>
         )}
