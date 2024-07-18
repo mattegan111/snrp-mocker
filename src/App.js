@@ -282,6 +282,7 @@ function TopBar() {
     history,
     setEditingField,
     setVersionData,
+    currentVersion,
     setCurrentVersion,
     isCurrentVersion,
     allVersionsIterations,
@@ -290,6 +291,9 @@ function TopBar() {
     setHideEditingTools,
     setViewSelected
   } = useContext(AppContext);
+
+  const [selectedVersion, setSelectedVersion] = useState(currentVersion);
+  const [pointOffset, setPointOffset] = useState(0);
 
   let latestVersionId = 1;
   let latestIterationId = 1;
@@ -413,7 +417,6 @@ function TopBar() {
     document.getElementById('prj-file-input').click();
   }
 
-  const [pointOffset, setPointOffset] = useState(0);
 
   function undo() {
     const newPointInHistory = history.length - 2 + pointOffset;
@@ -445,6 +448,51 @@ function TopBar() {
         },
       });
     }
+  }
+
+  function newVersion() {
+    const currentVersionId = currentVersion[0];
+    const currentIterationId = currentVersion[1];
+    const newIterationData = versionData.version[currentVersionId].iteration[currentIterationId];
+    
+    const currentLatestVersionId = Number(allVersionsIterations[allVersionsIterations.length - 1][0]);
+
+    const newVersionAndIterationId = [(currentLatestVersionId + 1).toString(), '1'];
+    const newVersionId = newVersionAndIterationId[0];
+
+    const newVersionWithCurrentIteration = {
+      1: newIterationData
+    }
+
+    const newVersionData = {
+      ...versionData,
+      version: {
+        ...versionData.version,
+        [newVersionId]: {
+          iteration: newVersionWithCurrentIteration
+        }
+      }
+    };
+    
+    setVersionData(newVersionData);
+    setData(newVersionData.version[newVersionId].iteration[1])
+    
+    const newAllVersionsAndIterations = [...allVersionsIterations, newVersionAndIterationId];
+    setAllVersionsIterations(newAllVersionsAndIterations);
+    setCurrentVersion(newVersionAndIterationId);
+    setSelectedVersion(newVersionAndIterationId);
+  }
+
+  function handleChangeVersion(e) {
+    let newVersionArr = e.target.value.split(',');
+    
+    setCurrentVersion(newVersionArr);
+    setSelectedVersion(newVersionArr);
+    setData(
+      versionData.version[newVersionArr[0]].iteration[
+        newVersionArr[1]
+      ]
+    );
   }
 
   return (
@@ -547,30 +595,22 @@ function TopBar() {
             <div className="top-bar-buttons">
               <select
                 className="side-margin-5"
-                onChange={(e) => {
-                  let newVersionArr = e.target.value.split(',');
-                  setCurrentVersion(newVersionArr);
-                  setData(
-                    versionData.version[newVersionArr[0]].iteration[
-                      newVersionArr[1]
-                    ]
-                  );
-                }}
+                onChange={(e) => handleChangeVersion(e)}
               >
-                {[...allVersionsIterations]
+                {allVersionsIterations && (
+                  [...allVersionsIterations]
                   .reverse()
-                  .map((versionIteration) => (
+                  .map((versionIteration, i) => (
                     <option
-                      selected={
-                        [latestVersionId, latestIterationId] == versionIteration
-                      }
                       value={versionIteration}
+                      selected={selectedVersion == versionIteration}
                     >
                       {versionIteration[0]}.{versionIteration[1]}
                     </option>
-                  ))}
+                  ))
+                )}
               </select>
-              <button className="btn-a-small side-margin-5">New Version</button>
+              <button className="btn-a-small side-margin-5"onClick={newVersion}>New Version</button>
               <button className="btn-a-small side-margin-5">
                 New Iteration
               </button>
@@ -586,9 +626,11 @@ function TopBar() {
                   .reverse()
                   .map((versionIteration) => (
                     <option
-                      selected={
-                        [latestVersionId, latestIterationId] == versionIteration
-                      }
+                    selected={
+                      (currentVersion && currentVersion.length === 2)
+                        ? [currentVersion[0], currentVersion[1]] == versionIteration
+                        : [latestVersionId, latestIterationId] == versionIteration
+                    }
                       value={versionIteration}
                     >
                       {versionIteration[0]}.{versionIteration[1]}
@@ -601,7 +643,9 @@ function TopBar() {
                   .map((versionIteration) => (
                     <option
                       selected={
-                        [latestVersionId, latestIterationId] == versionIteration
+                        (currentVersion && currentVersion.length === 2)
+                          ? [currentVersion[0], currentVersion[1]] == versionIteration
+                          : [latestVersionId, latestIterationId] == versionIteration
                       }
                       value={versionIteration}
                     >
