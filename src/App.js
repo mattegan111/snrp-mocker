@@ -483,6 +483,41 @@ function TopBar() {
     setSelectedVersion(newVersionAndIterationId);
   }
 
+  function newIteration() {
+    const currentVersionId = currentVersion[0];
+    const currentIterationId = currentVersion[1];
+    const newIterationData = versionData.version[currentVersionId].iteration[currentIterationId];
+
+    const currentLatestVersionId = Number(allVersionsIterations[allVersionsIterations.length - 1][0]);
+    const currentLatestIterationId = Number(allVersionsIterations[allVersionsIterations.length - 1][1]);
+
+    const newVersionAndIterationId = [currentLatestVersionId.toString(), (currentLatestIterationId + 1).toString()];
+    const newVersionId = newVersionAndIterationId[0];
+    const newIterationId = newVersionAndIterationId[1];
+
+    const allIterations = versionData.version[currentVersionId].iteration;
+    const newVersionData = {
+      ...versionData,
+      version: {
+        ...versionData.version,
+        [newVersionId]: {
+          iteration: {
+            ...allIterations,
+            [newIterationId]: newIterationData
+          }
+        }
+      }
+    };
+
+    setVersionData(newVersionData);
+    setData(newVersionData.version[newVersionId].iteration[newIterationId]);
+    
+    const newAllVersionsAndIterations = [...allVersionsIterations, newVersionAndIterationId];
+    setAllVersionsIterations(newAllVersionsAndIterations);
+    setCurrentVersion(newVersionAndIterationId);
+    setSelectedVersion(newVersionAndIterationId);
+  }
+
   function handleChangeVersion(e) {
     let newVersionArr = e.target.value.split(',');
     
@@ -611,9 +646,7 @@ function TopBar() {
                 )}
               </select>
               <button className="btn-a-small side-margin-5"onClick={newVersion}>New Version</button>
-              <button className="btn-a-small side-margin-5">
-                New Iteration
-              </button>
+              <button className="btn-a-small side-margin-5" onClick={newIteration}>New Iteration</button>
               <button className="btn-a-small side-margin-5">Delete...</button>
             </div>
           </div>
