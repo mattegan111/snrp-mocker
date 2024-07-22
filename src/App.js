@@ -279,9 +279,9 @@ function TopBar() {
     data,
     setData,
     versionData,
+    setVersionData,
     history,
     setEditingField,
-    setVersionData,
     currentVersion,
     setCurrentVersion,
     isCurrentVersion,
@@ -289,7 +289,9 @@ function TopBar() {
     setAllVersionsIterations,
     hideEditingTools,
     setHideEditingTools,
-    setViewSelected
+    setViewSelected,
+    toggleEditingSidebar,
+    setEditingPane
   } = useContext(AppContext);
 
   const [selectedVersion, setSelectedVersion] = useState(currentVersion);
@@ -564,7 +566,10 @@ function TopBar() {
           <div className="top-bar-category">
             <h3>View</h3>
             <div className="top-bar-buttons">
-              <button className="btn-a-small side-margin-5">
+              <button className="btn-a-small side-margin-5" onClick={() => {
+                toggleEditingSidebar();
+                setEditingPane('form')
+              }}>
                 Key Requirements
               </button>
               <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('portal')}>Portal</button>
@@ -820,7 +825,7 @@ function FormDetailsField({ objKey }) {
   return (
     <div className="display-flex-column">
       <label className="editing-label">{convertSnakeToTitle(objKey)}</label>
-      <input
+      <textarea
         className="editing-field-input"
         value={data.form[objKey]}
         onChange={(e) => onChange(e, objKey)}
