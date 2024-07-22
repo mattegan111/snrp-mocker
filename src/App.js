@@ -569,9 +569,9 @@ function TopBar() {
               </button>
               <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('portal')}>Portal</button>
               <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('case')}>Case</button>
-              <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('deleted data')}>
+              {/* <button className="btn-a-small side-margin-5" onClick={() => setViewSelected('deleted data')}>
                 Deleted Data
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="vertical-split" />
@@ -649,7 +649,7 @@ function TopBar() {
               </select>
               <button className="btn-a-small side-margin-5"onClick={newVersion}>New Version</button>
               <button className="btn-a-small side-margin-5" onClick={newIteration}>New Iteration</button>
-              <button className="btn-a-small side-margin-5">Delete...</button>
+              {/* <button className="btn-a-small side-margin-5">Delete...</button> */}
             </div>
           </div>
           <div className="vertical-split" />
