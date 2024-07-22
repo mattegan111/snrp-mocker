@@ -453,7 +453,7 @@ function TopBar() {
   function newVersion() {
     const currentVersionId = currentVersion[0];
     const currentIterationId = currentVersion[1];
-    const newIterationData = versionData.version[currentVersionId].iteration[currentIterationId];
+    const newIterationData = cloneDeep(versionData.version[currentVersionId].iteration[currentIterationId]);
     
     const currentLatestVersionId = Number(allVersionsIterations[allVersionsIterations.length - 1][0]);
 
@@ -486,7 +486,7 @@ function TopBar() {
   function newIteration() {
     const currentVersionId = currentVersion[0];
     const currentIterationId = currentVersion[1];
-    const newIterationData = versionData.version[currentVersionId].iteration[currentIterationId];
+    const newIterationData = cloneDeep(versionData.version[currentVersionId].iteration[currentIterationId]);
 
     const currentLatestVersionId = Number(allVersionsIterations[allVersionsIterations.length - 1][0]);
     const currentLatestIterationId = Number(allVersionsIterations[allVersionsIterations.length - 1][1]);
@@ -495,7 +495,9 @@ function TopBar() {
     const newVersionId = newVersionAndIterationId[0];
     const newIterationId = newVersionAndIterationId[1];
 
-    const allIterations = versionData.version[currentVersionId].iteration;
+    const allIterations = cloneDeep(versionData.version[currentVersionId].iteration);
+    console.log('allIterations')
+    console.log(allIterations)
     const newVersionData = {
       ...versionData,
       version: {
