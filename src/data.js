@@ -191,7 +191,7 @@ export const data = {
               fieldIds: ['field-2', 'field-3'],
             },
           },
-          groupsOrder: ['group-1', 'group-2'],
+          groupsOrder: ['group-1', 'group-2']
         },
       },
     },
@@ -387,6 +387,14 @@ export const data = {
             },
           },
           groupsOrder: ['group-1', 'group-2'],
+          layouts: {
+            'layout-1': {
+              'field-1': '2.1 first name - layout 1'
+            },
+            'layout-2': {
+              'field-1': '2.1 first name - layout 2'
+            },
+          }
         },
       },
     },

@@ -296,6 +296,7 @@ function TopBar() {
 
   const [selectedVersion, setSelectedVersion] = useState(currentVersion);
   const [pointOffset, setPointOffset] = useState(0);
+  const [currentLayout, setCurrentLayout] = useState();
 
   let latestVersionId = 1;
   let latestIterationId = 1;
@@ -522,6 +523,22 @@ function TopBar() {
     setSelectedVersion(newVersionAndIterationId);
   }
 
+  function handleChangeLayout(e) {
+    if(e.target.value === 'New...'){
+      e.preventDefault();
+      const newData = cloneDeep(data);
+      const numberOfLayouts = Object.keys(newData.layouts).length;
+      const newLayoutKey = `layout-${numberOfLayouts + 1}`;
+      newData.layouts[newLayoutKey] = {};
+      setData({
+        ...newData
+      });
+      setCurrentLayout(newLayoutKey);
+    } else {
+      setCurrentLayout(e.target.value);
+    }
+  }
+
   function handleChangeVersion(e) {
     let newVersionArr = e.target.value.split(',');
     
@@ -604,9 +621,17 @@ function TopBar() {
           <div className="top-bar-category">
             <h3>Layouts</h3>
             <div className="top-bar-buttons">
-              <select className="side-margin-5">
-                <option>Layout 1</option>
-                <option>Layout 2</option>
+              <select 
+                className="side-margin-5" 
+                value={currentLayout}
+                onChange={(e) => handleChangeLayout(e)}
+              >
+                {
+                  Object.keys(data.layouts).map(layout => {
+                    return <option value={layout}>{layout}</option>
+                  })
+                }
+                <option value={"New..."}>New...</option>
               </select>
               <button className="btn-a-small side-margin-10">
                 Save Layout
